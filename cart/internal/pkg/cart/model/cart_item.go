@@ -6,5 +6,5 @@ type Sku = int64
 type CartItem struct {
 	SKU    Sku
 	UserId UID
-	Count  int16
+	Count  uint16
 }

@@ -12,7 +12,7 @@ type Cart struct {
 	storage Storage
 }
 
-func NewCart(capacity int) *Cart {
+func NewCart() *Cart {
 	return &Cart{storage: make(Storage)}
 }
 
@@ -25,7 +25,7 @@ func (c *Cart) AddItem(_ context.Context, item model.CartItem) model.CartItem {
 	return item
 }
 
-func (c *Cart) GetItems(_ context.Context, sku model.Sku) []model.CartItem {
+func (c *Cart) GetItems(_ context.Context) []model.CartItem {
 	out := make([]model.CartItem, 0, len(c.storage))
 	for _, val := range c.storage {
 		out = append(out, val)
@@ -33,9 +33,9 @@ func (c *Cart) GetItems(_ context.Context, sku model.Sku) []model.CartItem {
 	return out
 }
 
-func (c *Cart) DeleteItem(_ context.Context, item model.CartItem) {
-	_, exists := c.storage[item.SKU]
+func (c *Cart) DeleteItem(_ context.Context, sku model.Sku) {
+	_, exists := c.storage[sku]
 	if exists {
-		delete(c.storage, item.SKU)
+		delete(c.storage, sku)
 	}
 }
