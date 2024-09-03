@@ -22,15 +22,7 @@ type CartService struct {
 	productService ProductService
 }
 
-type ItemInfo struct {
-	SKU        model.Sku
-	Name       string
-	Price      uint32
-	Count      uint16
-	TotalPrice uint32
-}
-
-func NewService(repository CartRepository, ps ProductService) *CartService {
+func NewCartService(repository CartRepository, ps ProductService) *CartService {
 	return &CartService{repository: repository, productService: ps}
 }
 
@@ -42,19 +34,19 @@ func (s *CartService) AddItem(ctx context.Context, item model.CartItem) error {
 	return s.repository.AddItem(ctx, item)
 }
 
-func (s *CartService) GetItems(ctx context.Context, userId model.UID) ([]ItemInfo, error) {
+func (s *CartService) GetItems(ctx context.Context, userId model.UID) ([]model.ItemInfo, error) {
 	mas, err := s.repository.GetItems(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]ItemInfo, 0, len(mas))
+	result := make([]model.ItemInfo, 0, len(mas))
 	for _, val := range mas {
 		item, err := s.productService.GetProduct(ctx, val.SKU)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, ItemInfo{
+		result = append(result, model.ItemInfo{
 			SKU:        val.SKU,
 			Name:       item.Name,
 			Price:      item.Price,

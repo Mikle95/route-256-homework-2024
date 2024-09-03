@@ -6,15 +6,15 @@ import (
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
 )
 
-type ProductClient interface {
+type ProductRepository interface {
 	GetProduct(ctx context.Context, sku model.Sku) (*model.Item, error)
 }
 
 type ProductServiceStuct struct {
-	productClient ProductClient
+	productClient ProductRepository
 }
 
-func NewProductService(productClient ProductClient) *ProductServiceStuct {
+func NewProductService(productClient ProductRepository) *ProductServiceStuct {
 	return &ProductServiceStuct{productClient: productClient}
 }
 
