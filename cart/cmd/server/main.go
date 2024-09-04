@@ -5,17 +5,26 @@ import (
 	"net/http"
 
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/app/server"
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/http/middleware"
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/http/product"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/repository"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/service"
 )
 
+// TODO: Добавить валидацию
 func main() {
 	log.Println("app starting")
 
 	cartRepo := repository.NewUserStorage()
-	productRepo := repository.NewProductClient("http://route256.pavl.uk:8080", "testtoken")
 
-	productService := service.NewProductService(productRepo)
+	client := http.Client{
+		Transport: middleware.NewRetryRT(http.DefaultTransport),
+		Timeout:   0,
+	}
+
+	productClient := product.NewProductClient(client, "http://route256.pavl.uk:8080", "testtoken")
+
+	productService := service.NewProductService(productClient)
 	cartService := service.NewCartService(cartRepo, productService)
 
 	cartServer := server.NewCartServer(cartService)
@@ -28,7 +37,9 @@ func main() {
 
 	log.Println("server starting")
 
-	if err := http.ListenAndServe(":8082", mux); err != nil {
+	logMux := middleware.NewLogMux(mux)
+
+	if err := http.ListenAndServe(":8082", logMux); err != nil {
 		panic(err)
 	}
 
