@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -12,7 +11,13 @@ import (
 )
 
 type AddItemRequest struct {
-	Count uint16 `json: "count"`
+	Count model.Count `json:"count"`
+}
+
+type AddItemResponse struct {
+	SKU    model.Sku   `json:"sku"`
+	Count  model.Count `json:"count"`
+	UserId model.UID   `json:"user_id"`
 }
 
 // "POST /user/{user_id}/cart/{sku_id}"
@@ -56,12 +61,30 @@ func (s *CartServer) AddItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.cartService.AddItem(context.Background(), model.CartItem{
+	_, err = s.cartService.AddItem(context.Background(), model.CartItem{
 		SKU:    sku,
 		UserId: userId,
 		Count:  addItemRequest.Count,
 	})
+	if err != nil {
+		serverErr.Status = http.StatusBadRequest
+		serverErr.Text = err.Error()
+		writeErrorResponse(w, &serverErr)
+		return
+	}
 
-	// TODO: Дописать
-	fmt.Println(userId, sku, addItemRequest.Count)
+	// rawResponse, err := json.Marshal(&AddItemResponse{
+	// 	SKU:    item.SKU,
+	// 	Count:  item.Count,
+	// 	UserId: item.UserId,
+	// })
+	// if err != nil {
+	// 	serverErr.Status = http.StatusBadRequest
+	// 	serverErr.Text = err.Error()
+	// 	writeErrorResponse(w, &serverErr)
+	// 	return
+	// }
+
+	// fmt.Fprint(w, string(rawResponse))
+
 }

@@ -7,10 +7,14 @@ import (
 )
 
 type CartService interface {
-	AddItem(ctx context.Context, item model.CartItem) error
-	GetItems(ctx context.Context, userId model.UID) ([]model.ItemInfo, error)
+	AddItem(ctx context.Context, item model.CartItem) (model.CartItem, error)
+	GetItems(ctx context.Context, userId model.UID) (*model.UserCartInfo, error)
 	DeleteItem(ctx context.Context, userId model.UID, sku model.Sku) error
 	DeleteCart(ctx context.Context, userId model.UID) error
+}
+
+type Response struct {
+	Message string `json:"message"`
 }
 
 type CartServer struct {

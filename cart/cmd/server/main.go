@@ -22,10 +22,13 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /user/{user_id}/cart/{sku_id}", cartServer.AddItem)
+	mux.HandleFunc("GET /user/{user_id}/cart", cartServer.GetItems)
+	mux.HandleFunc("DELETE /user/{user_id}/cart/{sku_id}", cartServer.DeleteItem)
+	mux.HandleFunc("DELETE /user/{user_id}/cart", cartServer.DeleteCart)
 
 	log.Println("server starting")
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := http.ListenAndServe(":8082", mux); err != nil {
 		panic(err)
 	}
 

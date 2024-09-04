@@ -15,14 +15,14 @@ func NewUserStorage() *UserCart {
 	return &UserCart{storage: make(UserStorage)}
 }
 
-func (c *UserCart) AddItem(ctx context.Context, item model.CartItem) error {
+func (c *UserCart) AddItem(ctx context.Context, item model.CartItem) (model.CartItem, error) {
 	cart, exist := c.storage[item.UserId]
 	if !exist {
 		cart = *NewCart()
 	}
 	item = cart.AddItem(ctx, item)
 	c.storage[item.UserId] = cart
-	return nil
+	return item, nil
 }
 
 func (c *UserCart) DeleteItem(ctx context.Context, userId model.UID, sku model.Sku) error {
