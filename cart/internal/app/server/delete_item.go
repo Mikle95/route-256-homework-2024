@@ -4,16 +4,26 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
 )
+
+type DeleteItemRequest struct {
+	SKU    model.Sku `validate:"min=1"`
+	UserId model.UID `validate:"min=1"`
+}
 
 // "DELETE /user/{user_id}/cart/{sku_id}"
 func (s *CartServer) DeleteItem(w http.ResponseWriter, r *http.Request) {
+	deleteItemRequest := DeleteItemRequest{}
+
 	serverErr := ServerError{
 		Path: "DELETE /user/{user_id}/cart/{sku_id}",
 	}
 
 	rawID := r.PathValue("user_id")
-	userId, err := strconv.ParseInt(rawID, 10, 64)
+	var err error
+	deleteItemRequest.UserId, err = strconv.ParseInt(rawID, 10, 64)
 	if err != nil {
 		serverErr.Status = http.StatusBadRequest
 		serverErr.Text = "can't parse user_id"
@@ -22,7 +32,7 @@ func (s *CartServer) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rawID = r.PathValue("sku_id")
-	sku, err := strconv.ParseInt(rawID, 10, 64)
+	deleteItemRequest.SKU, err = strconv.ParseInt(rawID, 10, 64)
 	if err != nil {
 		serverErr.Status = http.StatusBadRequest
 		serverErr.Text = "can't parse sku_id"
@@ -30,7 +40,15 @@ func (s *CartServer) DeleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = s.cartService.DeleteItem(context.Background(), userId, sku)
+	// Валидация запроса
+	if _, err := s.validator.Validate(deleteItemRequest); err != nil {
+		serverErr.Status = http.StatusBadRequest
+		serverErr.Text = err.Error()
+		writeErrorResponse(w, &serverErr)
+		return
+	}
+
+	err = s.cartService.DeleteItem(context.Background(), deleteItemRequest.UserId, deleteItemRequest.SKU)
 	if err != nil {
 		serverErr.Status = http.StatusBadRequest
 		serverErr.Text = err.Error()

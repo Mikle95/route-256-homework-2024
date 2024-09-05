@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"bytes"
+	"io"
 	"log"
 	"net/http"
 )
@@ -13,11 +15,22 @@ func NewRetryRT(r http.RoundTripper) *RetryRT {
 	return &RetryRT{R: r}
 }
 
-// TODO: Протестировать
 func (r *RetryRT) RoundTrip(req *http.Request) (resp *http.Response, err error) {
-	for i := 0; i < 3; i++ {
+
+	data, err := io.ReadAll(req.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := req.Body.Close(); err != nil {
+		return nil, err
+	}
+
+	// 1 запрос и 3 ретрая
+	for i := 0; i < 4; i++ {
+		req.Body = io.NopCloser(bytes.NewReader(data))
 		resp, err = r.R.RoundTrip(req)
-		if err != nil || resp.StatusCode != 404 && resp.StatusCode != http.StatusTooManyRequests {
+		if err != nil || resp.StatusCode != 420 && resp.StatusCode != http.StatusTooManyRequests {
 			break
 		}
 		log.Printf("%v got status %v, Retrying", req.URL, resp.Status)
@@ -25,10 +38,3 @@ func (r *RetryRT) RoundTrip(req *http.Request) (resp *http.Response, err error) 
 
 	return resp, err
 }
-
-// func resetBody(request *http.Request, originalBody []byte) {
-// 	request.Body = io.NopCloser(bytes.NewBuffer(originalBody))
-// 	request.GetBody = func() (io.ReadCloser, error) {
-// 		return io.NopCloser(bytes.NewBuffer(originalBody)), nil
-// 	}
-// }

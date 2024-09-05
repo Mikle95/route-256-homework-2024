@@ -9,11 +9,17 @@ import (
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/http/product"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/repository"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/service"
+
+	gody "github.com/guiferpa/gody/v2"
+	"github.com/guiferpa/gody/v2/rule"
 )
 
 // TODO: Добавить валидацию
 func main() {
 	log.Println("app starting")
+
+	validator := gody.NewValidator()
+	validator.AddRules(rule.Min, rule.NotEmpty)
 
 	cartRepo := repository.NewUserStorage()
 
@@ -27,7 +33,7 @@ func main() {
 	productService := service.NewProductService(productClient)
 	cartService := service.NewCartService(cartRepo, productService)
 
-	cartServer := server.NewCartServer(cartService)
+	cartServer := server.NewCartServer(cartService, validator)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /user/{user_id}/cart/{sku_id}", cartServer.AddItem)

@@ -11,37 +11,21 @@ import (
 )
 
 type AddItemRequest struct {
-	Count model.Count `json:"count"`
+	Count  model.Count `json:"count" validate:"min=1"`
+	SKU    model.Sku   `validate:"min=1"`
+	UserId model.UID   `validate:"min=1"`
 }
 
-type AddItemResponse struct {
-	SKU    model.Sku   `json:"sku"`
-	Count  model.Count `json:"count"`
-	UserId model.UID   `json:"user_id"`
-}
+// type AddItemResponse struct {
+// 	SKU    model.Sku   `json:"sku"`
+// 	Count  model.Count `json:"count"`
+// 	UserId model.UID   `json:"user_id"`
+// }
 
 // "POST /user/{user_id}/cart/{sku_id}"
 func (s *CartServer) AddItem(w http.ResponseWriter, r *http.Request) {
 	serverErr := ServerError{
 		Path: "POST /user/{user_id}/cart/{sku_id}",
-	}
-
-	rawID := r.PathValue("user_id")
-	userId, err := strconv.ParseInt(rawID, 10, 64)
-	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = "can't parse user_id"
-		writeErrorResponse(w, &serverErr)
-		return
-	}
-
-	rawID = r.PathValue("sku_id")
-	sku, err := strconv.ParseInt(rawID, 10, 64)
-	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = "can't parse sku_id"
-		writeErrorResponse(w, &serverErr)
-		return
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -61,9 +45,35 @@ func (s *CartServer) AddItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	rawID := r.PathValue("user_id")
+	addItemRequest.UserId, err = strconv.ParseInt(rawID, 10, 64)
+	if err != nil {
+		serverErr.Status = http.StatusBadRequest
+		serverErr.Text = "can't parse user_id"
+		writeErrorResponse(w, &serverErr)
+		return
+	}
+
+	rawID = r.PathValue("sku_id")
+	addItemRequest.SKU, err = strconv.ParseInt(rawID, 10, 64)
+	if err != nil {
+		serverErr.Status = http.StatusBadRequest
+		serverErr.Text = "can't parse sku_id"
+		writeErrorResponse(w, &serverErr)
+		return
+	}
+
+	// Валидация запроса
+	if _, err := s.validator.Validate(addItemRequest); err != nil {
+		serverErr.Status = http.StatusBadRequest
+		serverErr.Text = err.Error()
+		writeErrorResponse(w, &serverErr)
+		return
+	}
+
 	_, err = s.cartService.AddItem(context.Background(), model.CartItem{
-		SKU:    sku,
-		UserId: userId,
+		SKU:    addItemRequest.SKU,
+		UserId: addItemRequest.UserId,
 		Count:  addItemRequest.Count,
 	})
 	if err != nil {
