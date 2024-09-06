@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,50 +13,66 @@ type GetItemsRequest struct {
 	UserId model.UID `validate:"min=1"`
 }
 
-// "GET /user/{user_id}/cart"
-func (s *CartServer) GetItems(w http.ResponseWriter, r *http.Request) {
-	getItemsRequest := GetItemsRequest{}
-	serverErr := ServerError{
-		Path: "GET /user/{user_id}/cart",
-	}
+var PathGetItems = "GET /user/{user_id}/cart"
 
+func (s *CartServer) ExtractGetItemsRequest(r *http.Request) (getItemsRequest *GetItemsRequest, err error) {
+	getItemsRequest = &GetItemsRequest{}
 	rawID := r.PathValue("user_id")
-	var err error
 	getItemsRequest.UserId, err = strconv.ParseInt(rawID, 10, 64)
 	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = "can't parse user_id"
-		writeErrorResponse(w, &serverErr)
-		return
+		return nil, err
 	}
 
 	// Валидация запроса
-	if _, err := s.validator.Validate(getItemsRequest); err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = err.Error()
+	_, err = s.validator.Validate(*getItemsRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	return getItemsRequest, nil
+}
+
+// "GET /user/{user_id}/cart"
+func (s *CartServer) GetItems(w http.ResponseWriter, r *http.Request) {
+	getItemsRequest, err := s.ExtractGetItemsRequest(r)
+	if err != nil {
+		serverErr := ServerError{
+			Status: http.StatusBadRequest,
+			Text:   err.Error(),
+			Path:   PathGetItems,
+		}
 		writeErrorResponse(w, &serverErr)
 		return
 	}
 
-	result, err := s.cartService.GetItems(context.Background(), getItemsRequest.UserId)
+	err = s.SendGetItemsResponse(w, r, getItemsRequest)
 	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = err.Error()
+		serverErr := ServerError{
+			Status: http.StatusInternalServerError,
+			Text:   err.Error(),
+			Path:   PathGetItems,
+		}
 		writeErrorResponse(w, &serverErr)
 		return
+	}
+}
+
+func (s *CartServer) SendGetItemsResponse(w http.ResponseWriter, r *http.Request, getItemsRequest *GetItemsRequest) (err error) {
+	result, err := s.cartService.GetItems(r.Context(), getItemsRequest.UserId)
+	if err != nil {
+		return err
 	}
 
 	rawResponse, err := json.Marshal(result)
 	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = err.Error()
-		writeErrorResponse(w, &serverErr)
-		return
+		return err
 	}
 
 	if len(result.Items) == 0 {
 		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, "{}")
 	} else {
 		fmt.Fprint(w, string(rawResponse))
 	}
+	return nil
 }

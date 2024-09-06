@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -18,19 +19,5 @@ func (e *ServerError) Error() string {
 func writeErrorResponse(w http.ResponseWriter, err *ServerError) {
 	w.WriteHeader(err.Status)
 	log.Println(err.Error())
-	// w.Header().Set("Content-Type", "application/json")
-
-	// jsonBytes, jsonErr := json.Marshal(Response{
-	// 	Message: err.Error(),
-	// })
-
-	// if jsonErr != nil {
-	// 	panic(jsonErr)
-	// }
-
-	// _, errOut := fmt.Fprint(w, string(jsonBytes))
-	// if errOut != nil {
-	// 	log.Printf("errOut.Error()")
-	// 	return
-	// }
+	fmt.Fprint(w, "{}")
 }

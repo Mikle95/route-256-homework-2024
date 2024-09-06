@@ -14,7 +14,6 @@ import (
 	"github.com/guiferpa/gody/v2/rule"
 )
 
-// TODO: Добавить валидацию
 func main() {
 	log.Println("app starting")
 
@@ -50,14 +49,3 @@ func main() {
 	}
 
 }
-
-// func test(cartService service.CartService) {
-// 	cartService.AddItem(context.Background(), model.CartItem{
-// 		SKU:    773297411,
-// 		Count:  2,
-// 		UserId: 1,
-// 	})
-
-// 	mas, _ := cartService.GetItems(context.Background(), 1)
-// 	fmt.Println(mas)
-// }

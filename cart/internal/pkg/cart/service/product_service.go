@@ -22,7 +22,7 @@ func NewProductService(productClient ProductRepository) *ProductServiceStuct {
 func (p *ProductServiceStuct) GetProduct(ctx context.Context, sku model.Sku) (*model.Item, error) {
 	item, err := p.productClient.GetProduct(ctx, sku)
 	if err == nil && item.Name == "" {
-		return nil, errors.New("invalid sku")
+		return nil, errors.New("sku does not exist")
 	}
 	return item, err
 }

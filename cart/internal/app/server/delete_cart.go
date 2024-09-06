@@ -1,7 +1,7 @@
 package server
 
 import (
-	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -12,51 +12,52 @@ type DeleteCartRequest struct {
 	UserId model.UID `validate:"min=1"`
 }
 
-// "DELETE /user/{user_id}/cart"
-func (s *CartServer) DeleteCart(w http.ResponseWriter, r *http.Request) {
-	deleteCartRequest := DeleteCartRequest{}
+var PathDeleteCart = "DELETE /user/{user_id}/cart"
 
-	serverErr := ServerError{
-		Path: "DELETE /user/{user_id}/cart",
-	}
-
+func (s *CartServer) ExtractDeleteCartRequest(r *http.Request) (deleteCartRequest *DeleteCartRequest, err error) {
+	deleteCartRequest = &DeleteCartRequest{}
 	rawID := r.PathValue("user_id")
-	var err error
 	deleteCartRequest.UserId, err = strconv.ParseInt(rawID, 10, 64)
 	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = "can't parse user_id"
-		writeErrorResponse(w, &serverErr)
-		return
+		return nil, err
 	}
 
 	// Валидация запроса
-	if _, err := s.validator.Validate(deleteCartRequest); err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = err.Error()
+	_, err = s.validator.Validate(*deleteCartRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	return deleteCartRequest, nil
+}
+
+// "DELETE /user/{user_id}/cart"
+func (s *CartServer) DeleteCart(w http.ResponseWriter, r *http.Request) {
+
+	deleteCartRequest, err := s.ExtractDeleteCartRequest(r)
+
+	if err != nil {
+		serverErr := ServerError{
+			Status: http.StatusBadRequest,
+			Text:   err.Error(),
+			Path:   PathDeleteCart,
+		}
 		writeErrorResponse(w, &serverErr)
 		return
 	}
 
-	err = s.cartService.DeleteCart(context.Background(), deleteCartRequest.UserId)
+	err = s.cartService.DeleteCart(r.Context(), deleteCartRequest.UserId)
 	if err != nil {
-		serverErr.Status = http.StatusBadRequest
-		serverErr.Text = err.Error()
+		serverErr := ServerError{
+			Path:   PathDeleteCart,
+			Status: http.StatusInternalServerError,
+			Text:   err.Error(),
+		}
 		writeErrorResponse(w, &serverErr)
 		return
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-	// rawResponse, err := json.Marshal(&Response{
-	// 	Message: "Ok!",
-	// })
-	// if err != nil {
-	// 	serverErr.Status = http.StatusBadRequest
-	// 	serverErr.Text = err.Error()
-	// 	writeErrorResponse(w, &serverErr)
-	// 	return
-	// }
-
-	// fmt.Fprint(w, string(rawResponse))
+	fmt.Fprint(w, "{}")
 
 }
