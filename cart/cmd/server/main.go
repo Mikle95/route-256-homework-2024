@@ -4,9 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	product_client "gitlab.ozon.dev/1mikle1/homework/cart/internal/adapter/product/client"
+	product_service "gitlab.ozon.dev/1mikle1/homework/cart/internal/adapter/product/service"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/app/server"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/http/middleware"
-	"gitlab.ozon.dev/1mikle1/homework/cart/internal/http/product"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/repository"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/service"
 
@@ -27,9 +28,9 @@ func main() {
 		Timeout:   0,
 	}
 
-	productClient := product.NewProductClient(client, "http://route256.pavl.uk:8080", "testtoken")
+	productClient := product_client.NewProductClient(client, "http://route256.pavl.uk:8080", "testtoken")
 
-	productService := service.NewProductService(productClient)
+	productService := product_service.NewProductService(productClient)
 	cartService := service.NewCartService(cartRepo, productService)
 
 	cartServer := server.NewCartServer(cartService, validator)

@@ -7,13 +7,14 @@ import (
 	"net/http"
 	"strconv"
 
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/domain"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
 )
 
 type AddItemRequest struct {
-	Count  model.Count `json:"count" validate:"min=1"`
-	SKU    model.Sku   `validate:"min=1"`
-	UserId model.UID   `validate:"min=1"`
+	Count  domain.Count `json:"count" validate:"min=1"`
+	SKU    domain.Sku   `validate:"min=1"`
+	UserId domain.UID   `validate:"min=1"`
 }
 
 var PathAddItem = "POST /user/{user_id}/cart/{sku_id}"

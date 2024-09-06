@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/domain"
 )
 
 type RequestData struct {
@@ -18,7 +18,7 @@ type ResponseData struct {
 	Price uint32 `json:"price"`
 }
 
-func (p *ProductClient) GetProduct(ctx context.Context, sku model.Sku) (rd *model.Item, err error) {
+func (p *ProductClient) GetProduct(ctx context.Context, sku domain.Sku) (rd *domain.Item, err error) {
 	path_api := "/get_product"
 
 	body := RequestData{
@@ -42,7 +42,7 @@ func (p *ProductClient) GetProduct(ctx context.Context, sku model.Sku) (rd *mode
 		return nil, err
 	}
 
-	result := model.Item{
+	result := domain.Item{
 		SKU:   sku,
 		Name:  responseData.Name,
 		Price: responseData.Price,

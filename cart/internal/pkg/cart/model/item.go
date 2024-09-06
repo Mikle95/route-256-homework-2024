@@ -2,12 +2,6 @@ package model
 
 type Price = uint32
 
-type Item struct {
-	SKU   Sku
-	Name  string
-	Price Price
-}
-
 type ItemInfo struct {
 	SKU   Sku    `json:"sku_id"`
 	Name  string `json:"name"`

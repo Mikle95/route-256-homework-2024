@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/domain"
 )
 
 type DeleteItemRequest struct {
-	SKU    model.Sku `validate:"min=1"`
-	UserId model.UID `validate:"min=1"`
+	SKU    domain.Sku `validate:"min=1"`
+	UserId domain.UID `validate:"min=1"`
 }
 
 func (s *CartServer) ExtractDeleteItemRequest(r *http.Request) (deleteItemRequest *DeleteItemRequest, err error) {
@@ -40,7 +40,7 @@ var PathDeleteItem = "DELETE /user/{user_id}/cart"
 
 // "DELETE /user/{user_id}/cart/{sku_id}"
 func (s *CartServer) DeleteItem(w http.ResponseWriter, r *http.Request) {
-	deleteItemRequest, err := s.ExtractAddItemRequest(r)
+	deleteItemRequest, err := s.ExtractDeleteItemRequest(r)
 	if err != nil {
 		serverErr := ServerError{
 			Status: http.StatusBadRequest,

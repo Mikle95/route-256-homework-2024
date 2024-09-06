@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/domain"
 )
 
 type GetItemsRequest struct {
-	UserId model.UID `validate:"min=1"`
+	UserId domain.UID `validate:"min=1"`
 }
 
 var PathGetItems = "GET /user/{user_id}/cart"

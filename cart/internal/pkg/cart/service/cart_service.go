@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"gitlab.ozon.dev/1mikle1/homework/cart/internal/domain"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
 )
 
@@ -14,7 +15,7 @@ type CartRepository interface {
 }
 
 type ProductService interface {
-	GetProduct(ctx context.Context, sku model.Sku) (*model.Item, error)
+	GetProduct(ctx context.Context, sku model.Sku) (*domain.Item, error)
 }
 
 type CartService struct {
