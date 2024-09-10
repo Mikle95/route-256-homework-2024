@@ -7,7 +7,13 @@ import (
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
 )
 
-type UserStorage = map[model.UID]Cart
+type ICart interface {
+	AddItem(context.Context, model.CartItem) model.CartItem
+	DeleteItem(context.Context, model.Sku)
+	GetItems(context.Context) []model.CartItem
+}
+
+type UserStorage = map[model.UID]ICart
 type UserCart struct {
 	storage UserStorage
 	mtx     sync.RWMutex
@@ -23,7 +29,7 @@ func (c *UserCart) AddItem(ctx context.Context, item model.CartItem) (model.Cart
 
 	cart, exist := c.storage[item.UserId]
 	if !exist {
-		cart = *NewCart()
+		cart = NewCart()
 	}
 	item = cart.AddItem(ctx, item)
 	c.storage[item.UserId] = cart
