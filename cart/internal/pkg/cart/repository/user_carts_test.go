@@ -135,21 +135,24 @@ func TestUserCart_GetItems(t *testing.T) {
 		},
 	}
 
-	for _, item := range items {
-		userStorage.AddItem(ctx, item)
-	}
-	resItems, err := userStorage.GetItems(ctx, 123)
-	require.NoError(t, err)
+	t.Run("Get items", func(t *testing.T) {
 
-	sort.Slice(expectedItems, func(i, j int) bool {
-		return expectedItems[i].SKU < expectedItems[j].SKU
+		for _, item := range items {
+			userStorage.AddItem(ctx, item)
+		}
+		resItems, err := userStorage.GetItems(ctx, 123)
+		require.NoError(t, err)
+
+		sort.Slice(expectedItems, func(i, j int) bool {
+			return expectedItems[i].SKU < expectedItems[j].SKU
+		})
+
+		sort.Slice(resItems, func(i, j int) bool {
+			return resItems[i].SKU < resItems[j].SKU
+		})
+
+		assert.Equal(t, expectedItems, resItems)
 	})
-
-	sort.Slice(resItems, func(i, j int) bool {
-		return resItems[i].SKU < resItems[j].SKU
-	})
-
-	assert.Equal(t, expectedItems, resItems)
 }
 
 func TestUserCart_DeleteCart_Table(t *testing.T) {
