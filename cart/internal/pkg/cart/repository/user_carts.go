@@ -2,23 +2,34 @@ package repository
 
 import (
 	"context"
+	"sync"
 
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
 )
 
-type UserStorage = map[model.UID]Cart
+type ICart interface {
+	AddItem(context.Context, model.CartItem) model.CartItem
+	DeleteItem(context.Context, model.Sku)
+	GetItems(context.Context) []model.CartItem
+}
+
+type UserStorage = map[model.UID]ICart
 type UserCart struct {
 	storage UserStorage
+	mtx     sync.RWMutex
 }
 
 func NewUserStorage() *UserCart {
-	return &UserCart{storage: make(UserStorage)}
+	return &UserCart{storage: make(UserStorage), mtx: sync.RWMutex{}}
 }
 
 func (c *UserCart) AddItem(ctx context.Context, item model.CartItem) (model.CartItem, error) {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+
 	cart, exist := c.storage[item.UserId]
 	if !exist {
-		cart = *NewCart()
+		cart = NewCart()
 	}
 	item = cart.AddItem(ctx, item)
 	c.storage[item.UserId] = cart
@@ -26,6 +37,9 @@ func (c *UserCart) AddItem(ctx context.Context, item model.CartItem) (model.Cart
 }
 
 func (c *UserCart) DeleteItem(ctx context.Context, userId model.UID, sku model.Sku) error {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+
 	cart, exist := c.storage[userId]
 	if exist {
 		cart.DeleteItem(ctx, sku)
@@ -34,6 +48,9 @@ func (c *UserCart) DeleteItem(ctx context.Context, userId model.UID, sku model.S
 }
 
 func (c *UserCart) GetItems(ctx context.Context, userId model.UID) ([]model.CartItem, error) {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+
 	cart, exist := c.storage[userId]
 	if exist {
 		return cart.GetItems(ctx), nil
@@ -42,6 +59,9 @@ func (c *UserCart) GetItems(ctx context.Context, userId model.UID) ([]model.Cart
 }
 
 func (c *UserCart) DeleteCart(ctx context.Context, userId model.UID) error {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+
 	_, exist := c.storage[userId]
 	if exist {
 		delete(c.storage, userId)

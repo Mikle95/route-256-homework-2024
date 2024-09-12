@@ -19,7 +19,10 @@ func main() {
 	log.Println("app starting")
 
 	validator := gody.NewValidator()
-	validator.AddRules(rule.Min, rule.NotEmpty)
+	err := validator.AddRules(rule.Min, rule.NotEmpty)
+	if err != nil {
+		panic(err)
+	}
 
 	cartRepo := repository.NewUserStorage()
 
