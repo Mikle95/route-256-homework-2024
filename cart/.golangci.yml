@@ -1,0 +1,12 @@
+run:
+
+linters:
+  enable:
+    - gocognit
+    - gocyclo
+
+gocognit:
+  min-complexity: 3
+
+gocyclo:
+  min-complexity: 3

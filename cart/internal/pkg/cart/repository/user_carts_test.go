@@ -84,11 +84,13 @@ func TestUserCart_DeleteItem_Table(t *testing.T) {
 	}
 
 	userStorage := NewUserStorage()
-	userStorage.AddItem(ctx, model.CartItem{
+	_, err := userStorage.AddItem(ctx, model.CartItem{
 		SKU:    100,
 		UserId: 123,
 		Count:  2,
 	})
+
+	require.NoError(t, err)
 
 	for _, tt := range testData {
 		t.Run(tt.name, func(t *testing.T) {
@@ -138,7 +140,8 @@ func TestUserCart_GetItems(t *testing.T) {
 	t.Run("Get items", func(t *testing.T) {
 
 		for _, item := range items {
-			userStorage.AddItem(ctx, item)
+			_, err := userStorage.AddItem(ctx, item)
+			require.NoError(t, err)
 		}
 		resItems, err := userStorage.GetItems(ctx, 123)
 		require.NoError(t, err)
@@ -178,11 +181,13 @@ func TestUserCart_DeleteCart_Table(t *testing.T) {
 	}
 
 	userStorage := NewUserStorage()
-	userStorage.AddItem(ctx, model.CartItem{
+	_, err := userStorage.AddItem(ctx, model.CartItem{
 		SKU:    100,
 		UserId: 123,
 		Count:  2,
 	})
+
+	require.NoError(t, err)
 
 	for _, tt := range testData {
 		t.Run(tt.name, func(t *testing.T) {

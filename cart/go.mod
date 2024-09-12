@@ -1,6 +1,8 @@
 module gitlab.ozon.dev/1mikle1/homework/cart
 
-go 1.22
+go 1.22.0
+
+toolchain go1.22.5
 
 require (
 	github.com/gojuno/minimock/v3 v3.4.0
@@ -10,7 +12,10 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fzipp/gocyclo v0.6.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/uudashr/gocognit v1.1.3 // indirect
+	golang.org/x/tools v0.25.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
