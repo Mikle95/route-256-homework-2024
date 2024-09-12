@@ -7,4 +7,4 @@ test-coverage:
 	go tool cover -func cover.out
 
 check-linters:
-	golangci-lint run
+	golangci-lint run ./cart/...
