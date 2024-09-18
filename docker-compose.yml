@@ -6,3 +6,9 @@ services:
     build: ./cart/
     ports:
       - "8082:8082" # HTTP
+
+  loms:
+    container_name: loms
+    build: ./loms/
+    ports:
+      - "8083:8083" # gRPC
