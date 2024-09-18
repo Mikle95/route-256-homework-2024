@@ -20,6 +20,10 @@ func (s *OrderStorage) GetOrder(id model.OID) (model.Order, error) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
+	if id >= model.OID(len(s.storage)) {
+		return model.Order{}, errors.New("wrong id")
+	}
+
 	return s.storage[id], nil
 }
 

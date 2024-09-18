@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"sync"
 
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
 )
@@ -17,10 +18,11 @@ type IStockService interface {
 
 type OrderService struct {
 	orderRepo IOrderRepo
+	mtx       sync.RWMutex
 }
 
 func NewOrderService(orderRepo IOrderRepo, stockServ IStockService) *OrderService {
-	return &OrderService{orderRepo: orderRepo}
+	return &OrderService{orderRepo: orderRepo, mtx: sync.RWMutex{}}
 }
 
 func (s *OrderService) Create(order model.Order) (model.OID, error) {
@@ -29,4 +31,22 @@ func (s *OrderService) Create(order model.Order) (model.OID, error) {
 		return -1, errors.New("empty order")
 	}
 	return s.orderRepo.AddOrder(order)
+}
+
+func (s *OrderService) SetStatus(id model.OID, status string) error {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
+
+	order, err := s.orderRepo.GetOrder(id)
+	if err != nil {
+		return err
+	}
+
+	order.Status = status
+	s.orderRepo.changeOrder(id, order)
+	return nil
+}
+
+func (s *OrderService) GetById(id model.OID) (model.Order, error) {
+	return s.orderRepo.GetOrder(id)
 }
