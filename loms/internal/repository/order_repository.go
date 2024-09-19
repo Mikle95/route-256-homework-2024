@@ -40,8 +40,8 @@ func (s *OrderStorage) ChangeOrder(_ context.Context, id model.OID, order model.
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
-	if id <= model.OID(len(s.storage)) {
-		return errors.New("change order: wrong id!")
+	if id >= model.OID(len(s.storage)) || id < 0 {
+		return errors.New("change order: wrong id")
 	}
 
 	s.storage[id] = order

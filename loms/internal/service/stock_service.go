@@ -117,7 +117,6 @@ func (s *StockService) ReserveCancel(ctx context.Context, items []model.Item) er
 			panic(err)
 		}
 		stock.Reserved -= uint64(item.Count)
-		stock.Total_count -= uint64(item.Count)
 		err = s.stockRepo.InsertStock(ctx, stock)
 		if err != nil {
 			panic(err)
