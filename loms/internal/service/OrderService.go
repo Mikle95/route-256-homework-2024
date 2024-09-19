@@ -10,10 +10,7 @@ import (
 type IOrderRepo interface {
 	GetOrder(model.OID) (model.Order, error)
 	AddOrder(model.Order) (model.OID, error)
-	changeOrder(id model.OID, order model.Order) error
-}
-
-type IStockService interface {
+	ChangeOrder(id model.OID, order model.Order) error
 }
 
 type OrderService struct {
@@ -21,7 +18,7 @@ type OrderService struct {
 	mtx       sync.RWMutex
 }
 
-func NewOrderService(orderRepo IOrderRepo, stockServ IStockService) *OrderService {
+func NewOrderService(orderRepo IOrderRepo) *OrderService {
 	return &OrderService{orderRepo: orderRepo, mtx: sync.RWMutex{}}
 }
 
@@ -43,10 +40,13 @@ func (s *OrderService) SetStatus(id model.OID, status string) error {
 	}
 
 	order.Status = status
-	s.orderRepo.changeOrder(id, order)
+	s.orderRepo.ChangeOrder(id, order)
 	return nil
 }
 
 func (s *OrderService) GetById(id model.OID) (model.Order, error) {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
+
 	return s.orderRepo.GetOrder(id)
 }

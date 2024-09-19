@@ -35,7 +35,7 @@ func (s *OrderStorage) AddOrder(order model.Order) (model.OID, error) {
 	return model.OID(len(s.storage) - 1), nil
 }
 
-func (s *OrderStorage) changeOrder(id model.OID, order model.Order) error {
+func (s *OrderStorage) ChangeOrder(id model.OID, order model.Order) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
