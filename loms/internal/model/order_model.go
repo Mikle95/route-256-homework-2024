@@ -19,6 +19,6 @@ type Order struct {
 }
 
 type Item struct {
-	sku   SKU
-	count ItemCount
+	Sku   SKU
+	Count ItemCount
 }

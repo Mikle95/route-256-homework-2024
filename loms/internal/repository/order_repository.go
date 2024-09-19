@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"sync"
 
@@ -16,7 +17,7 @@ func NewOrderStorage() *OrderStorage {
 	return &OrderStorage{storage: make([]model.Order, 0), mtx: sync.RWMutex{}}
 }
 
-func (s *OrderStorage) GetOrder(id model.OID) (model.Order, error) {
+func (s *OrderStorage) GetOrder(_ context.Context, id model.OID) (model.Order, error) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -27,7 +28,7 @@ func (s *OrderStorage) GetOrder(id model.OID) (model.Order, error) {
 	return s.storage[id], nil
 }
 
-func (s *OrderStorage) AddOrder(order model.Order) (model.OID, error) {
+func (s *OrderStorage) AddOrder(_ context.Context, order model.Order) (model.OID, error) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
@@ -35,7 +36,7 @@ func (s *OrderStorage) AddOrder(order model.Order) (model.OID, error) {
 	return model.OID(len(s.storage) - 1), nil
 }
 
-func (s *OrderStorage) ChangeOrder(id model.OID, order model.Order) error {
+func (s *OrderStorage) ChangeOrder(_ context.Context, id model.OID, order model.Order) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
