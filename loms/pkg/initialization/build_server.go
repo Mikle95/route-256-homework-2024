@@ -14,7 +14,7 @@ import (
 func Build_server(ctx context.Context) *server.LOMSServer {
 	stockRepo := repository.NewStockStorage()
 	p, _ := filepath.Abs("stock-data.json")
-	fmt.Println(p)
+	fmt.Printf("Scan for %v\n", p)
 	err := Fill_stock_repo_from_json(ctx, stockRepo, p)
 	if err != nil {
 		panic(err)

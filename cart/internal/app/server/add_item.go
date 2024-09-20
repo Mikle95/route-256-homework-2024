@@ -78,7 +78,7 @@ func (s *CartServer) AddItem(w http.ResponseWriter, r *http.Request) {
 			Text:   err.Error(),
 		}
 
-		if serverErr.Text == "sku does not exist" {
+		if serverErr.Text == "sku does not exist" || serverErr.Text == "rpc error: code = FailedPrecondition desc = wrong sku" {
 			serverErr.Status = http.StatusPreconditionFailed
 		}
 

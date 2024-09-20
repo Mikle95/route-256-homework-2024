@@ -37,7 +37,7 @@ func Build_server() *server.CartServer {
 	productService := product_service.NewProductService(productClient)
 
 	// gRPC client
-	conn, err := grpc.NewClient(":50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("loms:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		panic(err)
 	}
