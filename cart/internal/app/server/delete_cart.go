@@ -12,7 +12,7 @@ type DeleteCartRequest struct {
 	UserId domain.UID `validate:"min=1"`
 }
 
-var PathDeleteCart = "DELETE /user/{user_id}/cart"
+const PathDeleteCart = "DELETE /user/{user_id}/cart"
 
 func (s *CartServer) ExtractDeleteCartRequest(r *http.Request) (deleteCartRequest *DeleteCartRequest, err error) {
 	deleteCartRequest = &DeleteCartRequest{}

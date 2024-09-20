@@ -36,7 +36,7 @@ func (s *CartServer) ExtractDeleteItemRequest(r *http.Request) (deleteItemReques
 	return deleteItemRequest, nil
 }
 
-var PathDeleteItem = "DELETE /user/{user_id}/cart"
+const PathDeleteItem = "DELETE /user/{user_id}/cart"
 
 // "DELETE /user/{user_id}/cart/{sku_id}"
 func (s *CartServer) DeleteItem(w http.ResponseWriter, r *http.Request) {

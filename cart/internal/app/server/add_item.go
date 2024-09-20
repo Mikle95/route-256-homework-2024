@@ -17,7 +17,7 @@ type AddItemRequest struct {
 	UserId domain.UID   `validate:"min=1"`
 }
 
-var PathAddItem = "POST /user/{user_id}/cart/{sku_id}"
+const PathAddItem = "POST /user/{user_id}/cart/{sku_id}"
 
 func (s *CartServer) ExtractAddItemRequest(r *http.Request) (addItemRequest *AddItemRequest, err error) {
 	addItemRequest = &AddItemRequest{}

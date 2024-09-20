@@ -33,10 +33,9 @@ func main() {
 	}
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-		// mw.Panic,
-		// mw.Logger,
-		// mw.Auth,
-		// mw.Validate,
+			// mw.Panic,
+			mw.Logger,
+			mw.Validate,
 		),
 	)
 	reflection.Register(grpcServer)
@@ -44,7 +43,7 @@ func main() {
 	ctx := context.Background()
 
 	stockRepo := repository.NewStockStorage()
-	p, _ := filepath.Abs("../../stock-data.json")
+	p, _ := filepath.Abs("stock-data.json")
 	fmt.Println(p)
 	err = initialization.Fill_stock_repo_from_json(ctx, stockRepo, p)
 	if err != nil {
