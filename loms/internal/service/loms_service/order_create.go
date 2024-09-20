@@ -14,9 +14,9 @@ func (s *LOMSService) OrderCreate(ctx context.Context, order model.Order) (model
 
 	err = s.stockS.Reserve(ctx, order.Items)
 	if err != nil {
-		err = s.orderS.SetStatus(ctx, id, model.STATUS_FAIL)
-		if err != nil {
-			panic(err)
+		err1 := s.orderS.SetStatus(ctx, id, model.STATUS_FAIL)
+		if err1 != nil {
+			panic(err1)
 		}
 		return id, err
 	}

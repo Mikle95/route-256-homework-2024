@@ -27,8 +27,3 @@ PHONY: .protoc-generate
 	--openapiv2_opt logtostderr=true \
 	${LOMS_PROTO_PATH}/loms.proto
 	go mod tidy
-
-
-.PHONY: .serve-swagger
-.serve-swagger:
-	../bin/swagger serve api/openapiv2/loms.swagger.json

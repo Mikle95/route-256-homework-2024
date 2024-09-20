@@ -22,7 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LOMSClient interface {
-	OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...grpc.CallOption) (*OrderCreateResponse, error)
+	OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...grpc.CallOption) (*OrderID, error)
+	OrderInfo(ctx context.Context, in *OrderIDRequest, opts ...grpc.CallOption) (*OrderInfoResponse, error)
+	OrderPay(ctx context.Context, in *OrderIDRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	OrderCancel(ctx context.Context, in *OrderIDRequest, opts ...grpc.CallOption) (*EmptyResponse, error)
+	StocksInfo(ctx context.Context, in *StockIDRequest, opts ...grpc.CallOption) (*StocksInfoResponse, error)
 }
 
 type lOMSClient struct {
@@ -33,9 +37,45 @@ func NewLOMSClient(cc grpc.ClientConnInterface) LOMSClient {
 	return &lOMSClient{cc}
 }
 
-func (c *lOMSClient) OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...grpc.CallOption) (*OrderCreateResponse, error) {
-	out := new(OrderCreateResponse)
+func (c *lOMSClient) OrderCreate(ctx context.Context, in *OrderCreateRequest, opts ...grpc.CallOption) (*OrderID, error) {
+	out := new(OrderID)
 	err := c.cc.Invoke(ctx, "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderCreate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lOMSClient) OrderInfo(ctx context.Context, in *OrderIDRequest, opts ...grpc.CallOption) (*OrderInfoResponse, error) {
+	out := new(OrderInfoResponse)
+	err := c.cc.Invoke(ctx, "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lOMSClient) OrderPay(ctx context.Context, in *OrderIDRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderPay", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lOMSClient) OrderCancel(ctx context.Context, in *OrderIDRequest, opts ...grpc.CallOption) (*EmptyResponse, error) {
+	out := new(EmptyResponse)
+	err := c.cc.Invoke(ctx, "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderCancel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *lOMSClient) StocksInfo(ctx context.Context, in *StockIDRequest, opts ...grpc.CallOption) (*StocksInfoResponse, error) {
+	out := new(StocksInfoResponse)
+	err := c.cc.Invoke(ctx, "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/StocksInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +86,11 @@ func (c *lOMSClient) OrderCreate(ctx context.Context, in *OrderCreateRequest, op
 // All implementations must embed UnimplementedLOMSServer
 // for forward compatibility
 type LOMSServer interface {
-	OrderCreate(context.Context, *OrderCreateRequest) (*OrderCreateResponse, error)
+	OrderCreate(context.Context, *OrderCreateRequest) (*OrderID, error)
+	OrderInfo(context.Context, *OrderIDRequest) (*OrderInfoResponse, error)
+	OrderPay(context.Context, *OrderIDRequest) (*EmptyResponse, error)
+	OrderCancel(context.Context, *OrderIDRequest) (*EmptyResponse, error)
+	StocksInfo(context.Context, *StockIDRequest) (*StocksInfoResponse, error)
 	mustEmbedUnimplementedLOMSServer()
 }
 
@@ -54,8 +98,20 @@ type LOMSServer interface {
 type UnimplementedLOMSServer struct {
 }
 
-func (UnimplementedLOMSServer) OrderCreate(context.Context, *OrderCreateRequest) (*OrderCreateResponse, error) {
+func (UnimplementedLOMSServer) OrderCreate(context.Context, *OrderCreateRequest) (*OrderID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderCreate not implemented")
+}
+func (UnimplementedLOMSServer) OrderInfo(context.Context, *OrderIDRequest) (*OrderInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderInfo not implemented")
+}
+func (UnimplementedLOMSServer) OrderPay(context.Context, *OrderIDRequest) (*EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderPay not implemented")
+}
+func (UnimplementedLOMSServer) OrderCancel(context.Context, *OrderIDRequest) (*EmptyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderCancel not implemented")
+}
+func (UnimplementedLOMSServer) StocksInfo(context.Context, *StockIDRequest) (*StocksInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StocksInfo not implemented")
 }
 func (UnimplementedLOMSServer) mustEmbedUnimplementedLOMSServer() {}
 
@@ -88,6 +144,78 @@ func _LOMS_OrderCreate_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LOMS_OrderInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LOMSServer).OrderInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LOMSServer).OrderInfo(ctx, req.(*OrderIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LOMS_OrderPay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LOMSServer).OrderPay(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderPay",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LOMSServer).OrderPay(ctx, req.(*OrderIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LOMS_OrderCancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LOMSServer).OrderCancel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/OrderCancel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LOMSServer).OrderCancel(ctx, req.(*OrderIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LOMS_StocksInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StockIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LOMSServer).StocksInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gitlab.ozon.dev.homework.loms.api.loms.v1.LOMS/StocksInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LOMSServer).StocksInfo(ctx, req.(*StockIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LOMS_ServiceDesc is the grpc.ServiceDesc for LOMS service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +226,22 @@ var LOMS_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "OrderCreate",
 			Handler:    _LOMS_OrderCreate_Handler,
+		},
+		{
+			MethodName: "OrderInfo",
+			Handler:    _LOMS_OrderInfo_Handler,
+		},
+		{
+			MethodName: "OrderPay",
+			Handler:    _LOMS_OrderPay_Handler,
+		},
+		{
+			MethodName: "OrderCancel",
+			Handler:    _LOMS_OrderCancel_Handler,
+		},
+		{
+			MethodName: "StocksInfo",
+			Handler:    _LOMS_StocksInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
