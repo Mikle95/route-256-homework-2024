@@ -22,7 +22,7 @@ func (s *ItemServiceSuite) SetupSuite() {
 	storage := repository.NewUserStorage()
 	productClient := productC.NewProductClient(http.Client{}, "http://route256.pavl.uk:8080", "testtoken")
 	productService := productS.NewProductService(productClient)
-	s.service = service.NewCartService(storage, productService)
+	s.service = service.NewCartService(storage, productService, nil)
 
 	ctx := context.Background()
 

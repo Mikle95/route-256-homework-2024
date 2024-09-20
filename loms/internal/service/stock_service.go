@@ -76,7 +76,7 @@ func (s *StockService) ReserveRemove(ctx context.Context, items []model.Item) er
 			return err
 		}
 
-		if stock.Reserved-uint64(item.Count) < 0 {
+		if stock.Reserved < uint64(item.Count) {
 			return errors.New("can't remove more than reserved")
 		}
 	}
@@ -106,7 +106,7 @@ func (s *StockService) ReserveCancel(ctx context.Context, items []model.Item) er
 			return err
 		}
 
-		if stock.Reserved-uint64(item.Count) < 0 {
+		if stock.Reserved < uint64(item.Count) {
 			return errors.New("can't cancel more than reserved")
 		}
 	}

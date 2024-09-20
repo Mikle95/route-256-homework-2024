@@ -6,14 +6,9 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"path/filepath"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"gitlab.ozon.dev/1mikle1/homework/loms/internal/app/server"
-	"gitlab.ozon.dev/1mikle1/homework/loms/internal/mw"
-	"gitlab.ozon.dev/1mikle1/homework/loms/internal/repository"
-	"gitlab.ozon.dev/1mikle1/homework/loms/internal/service"
-	"gitlab.ozon.dev/1mikle1/homework/loms/internal/service/loms_service"
+	middleware "gitlab.ozon.dev/1mikle1/homework/loms/internal/middlware"
 	"gitlab.ozon.dev/1mikle1/homework/loms/pkg/api/loms/v1"
 	"gitlab.ozon.dev/1mikle1/homework/loms/pkg/initialization"
 	"google.golang.org/grpc"
@@ -27,35 +22,21 @@ const (
 )
 
 func main() {
+	ctx := context.Background()
+
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
 		panic(err)
 	}
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-			// mw.Panic,
-			mw.Logger,
-			mw.Validate,
+			middleware.Logger,
+			middleware.Validate,
 		),
 	)
 	reflection.Register(grpcServer)
 
-	ctx := context.Background()
-
-	stockRepo := repository.NewStockStorage()
-	p, _ := filepath.Abs("stock-data.json")
-	fmt.Println(p)
-	err = initialization.Fill_stock_repo_from_json(ctx, stockRepo, p)
-	if err != nil {
-		panic(err)
-	}
-
-	orderRepo := repository.NewOrderStorage()
-	stockS := service.NewStockService(stockRepo)
-	orderS := service.NewOrderService(orderRepo)
-	lomsService := loms_service.NewLOMSService(orderS, stockS)
-	server := server.NewLOMSServer(lomsService)
-	fmt.Print(server)
+	server := initialization.Build_server(ctx)
 
 	loms.RegisterLOMSServer(grpcServer, server)
 
@@ -78,7 +59,7 @@ func main() {
 	}
 	gwServer := &http.Server{
 		Addr:    fmt.Sprintf(":%d", httpPort),
-		Handler: mw.WithHTTPLoggingMiddleware(gwmux),
+		Handler: middleware.WithHTTPLoggingMiddleware(gwmux),
 	}
 
 	log.Printf("Serving gRPC-Gateway on %s\n", gwServer.Addr)
