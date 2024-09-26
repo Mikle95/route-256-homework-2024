@@ -98,3 +98,8 @@ LOMS_PROTO_PATH:="loms/api/loms/v1"
 # Генерация протофайлов с использованием buf
 PHONY: generate-buf
 generate-buf: .bin-deps .vendor-rm .buf-generate
+
+.PHONY: .install-goose
+.install-goose:
+	$(info Installing binary dependencies...)
+	GOBIN=$(LOCAL_BIN) go install github.com/pressly/goose/v3/cmd/goose@v3.22.1
