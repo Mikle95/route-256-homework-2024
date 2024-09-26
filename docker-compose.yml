@@ -13,3 +13,18 @@ services:
     ports:
       - "8081:8081" # HTTP
       - "50051:50051" # gRPC
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    command: ["postgres"]
+    environment:
+      POSTGRES_DB: loms_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
+
