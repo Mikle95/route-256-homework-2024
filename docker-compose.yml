@@ -1,20 +1,8 @@
 version: "3.8"
 
 services:
-  cart:
-    container_name: cart
-    build: ./cart/
-    ports:
-      - "8082:8082" # HTTP
-
-  loms:
-    container_name: loms
-    build: ./loms/
-    ports:
-      - "8081:8081" # HTTP
-      - "50051:50051" # gRPC
-
   postgres:
+    container_name: pg_db
     image: postgres:16
     restart: unless-stopped
     volumes:
@@ -27,4 +15,18 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_HOST_AUTH_METHOD: trust
+
+
+  cart:
+    container_name: cart
+    build: ./cart/
+    ports:
+      - "8082:8082" # HTTP
+
+  loms:
+    container_name: loms
+    build: ./loms/
+    ports:
+      - "8081:8081" # HTTP
+      - "50051:50051" # gRPC
 

@@ -2,25 +2,25 @@ package initialization
 
 import (
 	"context"
-	"fmt"
-	"path/filepath"
+	"time"
 
+	"github.com/jackc/pgx/v5"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/app/server"
-	"gitlab.ozon.dev/1mikle1/homework/loms/internal/repository"
+	"gitlab.ozon.dev/1mikle1/homework/loms/internal/repository_sqlc"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/service"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/service/loms_service"
 )
 
 func Build_server(ctx context.Context) *server.LOMSServer {
-	stockRepo := repository.NewStockStorage()
-	p, _ := filepath.Abs("stock-data.json")
-	fmt.Printf("Scan for %v\n", p)
-	err := Fill_stock_repo_from_json(ctx, stockRepo, p)
+	time.Sleep(time.Second)
+	conn, err := pgx.Connect(ctx, "postgres://user:password@pg_db:5432/loms_db")
 	if err != nil {
 		panic(err)
 	}
 
-	orderRepo := repository.NewOrderStorage()
+	stockRepo := repository_sqlc.NewStockStorage(conn)
+	orderRepo := repository_sqlc.NewOrderStorage(conn)
+
 	stockS := service.NewStockService(stockRepo)
 	orderS := service.NewOrderService(orderRepo)
 	lomsService := loms_service.NewLOMSService(orderS, stockS)
