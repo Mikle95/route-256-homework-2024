@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,7 +18,7 @@ type AddItemRequest struct {
 	UserId domain.UID   `validate:"min=1"`
 }
 
-var PathAddItem = "POST /user/{user_id}/cart/{sku_id}"
+const PathAddItem = "POST /user/{user_id}/cart/{sku_id}"
 
 func (s *CartServer) ExtractAddItemRequest(r *http.Request) (addItemRequest *AddItemRequest, err error) {
 	addItemRequest = &AddItemRequest{}
@@ -78,7 +79,7 @@ func (s *CartServer) AddItem(w http.ResponseWriter, r *http.Request) {
 			Text:   err.Error(),
 		}
 
-		if serverErr.Text == "sku does not exist" {
+		if errors.Is(err, domain.ErrorPrecondition) {
 			serverErr.Status = http.StatusPreconditionFailed
 		}
 

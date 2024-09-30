@@ -13,7 +13,7 @@ type GetItemsRequest struct {
 	UserId domain.UID `validate:"min=1"`
 }
 
-var PathGetItems = "GET /user/{user_id}/cart"
+const PathGetItems = "GET /user/{user_id}/cart"
 
 func (s *CartServer) ExtractGetItemsRequest(r *http.Request) (getItemsRequest *GetItemsRequest, err error) {
 	getItemsRequest = &GetItemsRequest{}

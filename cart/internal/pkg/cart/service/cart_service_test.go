@@ -51,12 +51,15 @@ func TestCartService_AddItem_table(t *testing.T) {
 	ctrl := minimock.NewController(t)
 	productServMock := mock.NewProductServiceMock(ctrl)
 	cartRepoMock := mock.NewCartRepositoryMock(ctrl)
-	cs := NewCartService(cartRepoMock, productServMock)
+	lomsServiceMock := mock.NewILOMSServiceMock(ctrl)
+
+	cs := NewCartService(cartRepoMock, productServMock, lomsServiceMock)
 
 	for _, tt := range testData {
 		t.Run(tt.name, func(t *testing.T) {
 			productServMock.GetProductMock.Expect(ctx, tt.item.SKU).Return(&domain.Item{}, tt.wantErr)
 			cartRepoMock.AddItemMock.Expect(ctx, tt.item).Return(tt.expectedItem, nil)
+			lomsServiceMock.StocksInfoMock.Expect(ctx, tt.item.SKU).Return(100, nil)
 
 			item, err := cs.AddItem(ctx, tt.item)
 
@@ -71,7 +74,7 @@ func TestCartService_DeleteItem(t *testing.T) {
 	ctrl := minimock.NewController(t)
 	productServMock := mock.NewProductServiceMock(ctrl)
 	cartRepoMock := mock.NewCartRepositoryMock(ctrl)
-	cs := NewCartService(cartRepoMock, productServMock)
+	cs := NewCartService(cartRepoMock, productServMock, nil)
 
 	t.Run("Delete item test", func(t *testing.T) {
 
@@ -86,7 +89,7 @@ func TestCartService_DeleteCart(t *testing.T) {
 	ctrl := minimock.NewController(t)
 	productServMock := mock.NewProductServiceMock(ctrl)
 	cartRepoMock := mock.NewCartRepositoryMock(ctrl)
-	cs := NewCartService(cartRepoMock, productServMock)
+	cs := NewCartService(cartRepoMock, productServMock, nil)
 
 	t.Run("Delete cart test", func(t *testing.T) {
 
@@ -101,7 +104,7 @@ func TestCartService_GetItems(t *testing.T) {
 	ctrl := minimock.NewController(t)
 	productServMock := mock.NewProductServiceMock(ctrl)
 	cartRepoMock := mock.NewCartRepositoryMock(ctrl)
-	cs := NewCartService(cartRepoMock, productServMock)
+	cs := NewCartService(cartRepoMock, productServMock, nil)
 
 	userId := int64(100)
 
