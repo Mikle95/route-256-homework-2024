@@ -21,7 +21,7 @@ func (s *OrderStorage) GetOrder(_ context.Context, id model.OID) (model.Order, e
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
 
-	if id >= model.OID(len(s.storage)) {
+	if id >= model.OID(len(s.storage)) || id < 0 {
 		return model.Order{}, errors.New("wrong id")
 	}
 
