@@ -2,7 +2,7 @@ package product
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/domain"
 )
@@ -22,7 +22,7 @@ func NewProductService(productClient ProductRepository) *ProductServiceStuct {
 func (p *ProductServiceStuct) GetProduct(ctx context.Context, sku domain.Sku) (*domain.Item, error) {
 	item, err := p.productClient.GetProduct(ctx, sku)
 	if err == nil && item.Name == "" {
-		return nil, errors.New("sku does not exist")
+		return nil, fmt.Errorf("product service, %w: sku does not exist", domain.ErrorPrecondition)
 	}
 	return item, err
 }
