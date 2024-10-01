@@ -3,3 +3,4 @@ go 1.22.0
 toolchain go1.22.5
 
 use ./cart
+use ./loms

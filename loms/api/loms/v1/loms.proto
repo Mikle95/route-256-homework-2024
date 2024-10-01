@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package gitlab.ozon.dev.homework.loms.api.loms.v1;
+
+option go_package = "gitlab.ozon.dev/1mikle1/homework/pkg/api/loms/v1;loms";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "loms";
+    version: "1.0.0";
+  };
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "x-auth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "authorization";
+      };
+    }
+  }
+};
+
+
+service LOMS {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "LOMS service GOHW-3"
+    external_docs: {
+      url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/main/examples/internal/proto/examplepb/a_bit_of_everything.proto";
+      description: "Find out more about grpc-gateway";
+    }
+  };
+
+
+  rpc OrderCreate(OrderCreateRequest) returns (OrderID) {
+    option (google.api.http) = {
+      post: "/order/create"
+      body: "info"
+    };
+  }
+
+  rpc OrderInfo(OrderIDRequest) returns (OrderInfoResponse) {
+    option (google.api.http) = {
+      post: "/order/info"
+      body: "info"
+    };
+  }
+
+  rpc OrderPay(OrderIDRequest) returns (EmptyResponse) {
+    option (google.api.http) = {
+      post: "/order/pay"
+      body: "info"
+    };
+  }
+
+  rpc OrderCancel(OrderIDRequest) returns (EmptyResponse) {
+    option (google.api.http) = {
+      post: "/order/cancel"
+      body: "info"
+    };
+  }
+
+  rpc StocksInfo(StockIDRequest) returns (StocksInfoResponse){
+    option (google.api.http) = {
+      post: "/stock/info"
+      body: "info"
+    };
+  }
+}
+
+message EmptyResponse {}
+
+message OrderCreateRequest{
+    OrderInfo info = 1[
+    (validate.rules).message.required = true
+    ];
+}
+
+message OrderIDRequest {
+    OrderID info = 1[
+    (validate.rules).message.required = true
+    ];
+}
+
+message StockIDRequest {
+    StockID info = 1[
+    (validate.rules).message.required = true
+    ];
+}
+
+message OrderInfo {
+    int64 user = 1;
+    repeated Item items = 2;
+}
+
+message OrderInfoResponse {
+    int64 user = 1;
+    repeated Item items = 2;
+    string status = 3;
+}
+
+message Item {
+    uint32 sku = 1[(validate.rules).uint32 = {
+      gt: 0
+    }];
+    uint32 count = 3 [(validate.rules).uint32 = {
+      gt: 0
+    }];
+}
+
+message StockID {
+    uint32 sku = 1 [(validate.rules).uint32 = {
+      gt: 0
+    }]; 
+}
+
+message OrderID {
+    int64 orderID = 1;
+}
+
+message StocksInfoResponse {
+    uint64 count = 1 [(validate.rules).uint64 = {
+      gt: 0
+    }];
+}
