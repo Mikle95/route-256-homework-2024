@@ -32,10 +32,10 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_LOMS_OrderCreate_0(ctx context.Context, marshaler runtime.Marshaler, client LOMSClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderCreateRequest
+	var protoReq OrderInfoMessage
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -45,10 +45,10 @@ func request_LOMS_OrderCreate_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_LOMS_OrderCreate_0(ctx context.Context, marshaler runtime.Marshaler, server LOMSServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderCreateRequest
+	var protoReq OrderInfoMessage
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -58,10 +58,10 @@ func local_request_LOMS_OrderCreate_0(ctx context.Context, marshaler runtime.Mar
 }
 
 func request_LOMS_OrderInfo_0(ctx context.Context, marshaler runtime.Marshaler, client LOMSClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderIDRequest
+	var protoReq OrderID
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -71,10 +71,10 @@ func request_LOMS_OrderInfo_0(ctx context.Context, marshaler runtime.Marshaler, 
 }
 
 func local_request_LOMS_OrderInfo_0(ctx context.Context, marshaler runtime.Marshaler, server LOMSServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderIDRequest
+	var protoReq OrderID
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -84,10 +84,10 @@ func local_request_LOMS_OrderInfo_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func request_LOMS_OrderPay_0(ctx context.Context, marshaler runtime.Marshaler, client LOMSClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderIDRequest
+	var protoReq OrderID
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -97,10 +97,10 @@ func request_LOMS_OrderPay_0(ctx context.Context, marshaler runtime.Marshaler, c
 }
 
 func local_request_LOMS_OrderPay_0(ctx context.Context, marshaler runtime.Marshaler, server LOMSServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderIDRequest
+	var protoReq OrderID
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -110,10 +110,10 @@ func local_request_LOMS_OrderPay_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 func request_LOMS_OrderCancel_0(ctx context.Context, marshaler runtime.Marshaler, client LOMSClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderIDRequest
+	var protoReq OrderID
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -123,10 +123,10 @@ func request_LOMS_OrderCancel_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_LOMS_OrderCancel_0(ctx context.Context, marshaler runtime.Marshaler, server LOMSServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq OrderIDRequest
+	var protoReq OrderID
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -139,7 +139,7 @@ func request_LOMS_StocksInfo_0(ctx context.Context, marshaler runtime.Marshaler,
 	var protoReq StockIDRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -152,7 +152,7 @@ func local_request_LOMS_StocksInfo_0(ctx context.Context, marshaler runtime.Mars
 	var protoReq StockIDRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq.Info); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 

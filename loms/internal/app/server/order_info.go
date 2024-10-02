@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *LOMSServer) OrderInfo(ctx context.Context, in *loms.OrderIDRequest) (*loms.OrderInfoResponse, error) {
-	order, err := s.impl.OrderInfo(ctx, in.Info.OrderID)
+func (s *LOMSServer) OrderInfo(ctx context.Context, in *loms.OrderID) (*loms.OrderInfoResponse, error) {
+	order, err := s.impl.OrderInfo(ctx, in.OrderID)
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, err.Error())
 	}

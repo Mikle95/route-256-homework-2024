@@ -44,7 +44,7 @@
         },
         "parameters": [
           {
-            "name": "info",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
@@ -76,11 +76,11 @@
         },
         "parameters": [
           {
-            "name": "info",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/lomsv1OrderInfo"
+              "$ref": "#/definitions/v1OrderInfoMessage"
             }
           }
         ],
@@ -108,7 +108,7 @@
         },
         "parameters": [
           {
-            "name": "info",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
@@ -140,7 +140,7 @@
         },
         "parameters": [
           {
-            "name": "info",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
@@ -172,11 +172,11 @@
         },
         "parameters": [
           {
-            "name": "info",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1StockID"
+              "$ref": "#/definitions/v1StockIDRequest"
             }
           }
         ],
@@ -187,22 +187,6 @@
     }
   },
   "definitions": {
-    "lomsv1OrderInfo": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "type": "string",
-          "format": "int64"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1Item"
-          }
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -256,6 +240,22 @@
         }
       }
     },
+    "v1OrderInfoMessage": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Item"
+          }
+        }
+      }
+    },
     "v1OrderInfoResponse": {
       "type": "object",
       "properties": {
@@ -275,7 +275,7 @@
         }
       }
     },
-    "v1StockID": {
+    "v1StockIDRequest": {
       "type": "object",
       "properties": {
         "sku": {

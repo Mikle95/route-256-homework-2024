@@ -8,16 +8,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *LOMSServer) OrderPay(ctx context.Context, in *loms.OrderIDRequest) (*loms.EmptyResponse, error) {
-	err := s.impl.OrderPay(ctx, in.Info.OrderID)
+func (s *LOMSServer) OrderPay(ctx context.Context, in *loms.OrderID) (*loms.EmptyResponse, error) {
+	err := s.impl.OrderPay(ctx, in.OrderID)
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, err.Error())
 	}
 	return &loms.EmptyResponse{}, nil
 }
 
-func (s *LOMSServer) OrderCancel(ctx context.Context, in *loms.OrderIDRequest) (*loms.EmptyResponse, error) {
-	err := s.impl.OrderCancel(ctx, in.Info.OrderID)
+func (s *LOMSServer) OrderCancel(ctx context.Context, in *loms.OrderID) (*loms.EmptyResponse, error) {
+	err := s.impl.OrderCancel(ctx, in.OrderID)
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, err.Error())
 	}
