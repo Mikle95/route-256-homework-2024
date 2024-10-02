@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -78,7 +79,7 @@ func (s *CartServer) AddItem(w http.ResponseWriter, r *http.Request) {
 			Text:   err.Error(),
 		}
 
-		if serverErr.Text == "sku does not exist" || serverErr.Text == "rpc error: code = FailedPrecondition desc = wrong sku" {
+		if errors.Is(err, domain.ErrorPrecondition) {
 			serverErr.Status = http.StatusPreconditionFailed
 		}
 

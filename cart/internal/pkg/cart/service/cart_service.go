@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/adapter/loms_service/loms_client"
 	product "gitlab.ozon.dev/1mikle1/homework/cart/internal/adapter/product/service"
@@ -55,7 +55,7 @@ func (s *CartService) AddItem(ctx context.Context, item model.CartItem) (model.C
 	}
 
 	if count < uint64(item.Count) {
-		return model.CartItem{}, errors.New("item count > stock total_count")
+		return model.CartItem{}, fmt.Errorf("stocks info, %w: item count > stock total_count", domain.ErrorPrecondition)
 	}
 
 	return s.repository.AddItem(ctx, item)
