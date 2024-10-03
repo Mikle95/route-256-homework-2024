@@ -5,8 +5,8 @@ PROTOC = PATH="$$PATH:$(LOCAL_BIN)" protoc
 
 LOMS_PROTO_PATH:="api/loms/v1"
 
-PHONY: .protoc-generate
-.protoc-generate: #.bin-deps .vendor-proto
+PHONY: protoc-generate
+protoc-generate: #.bin-deps .vendor-proto
 	mkdir -p api/openapiv2
 	protoc \
 	-I ${LOMS_PROTO_PATH} \
@@ -29,6 +29,6 @@ PHONY: .protoc-generate
 	go mod tidy
 
 
-.PHONY: .serve-swagger
-.serve-swagger:
+.PHONY: serve-swagger
+serve-swagger:
 	../bin/swagger serve api/openapiv2/loms.swagger.json

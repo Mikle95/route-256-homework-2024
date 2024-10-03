@@ -99,11 +99,11 @@ LOMS_PROTO_PATH:="loms/api/loms/v1"
 PHONY: generate-buf
 generate-buf: .bin-deps .vendor-rm .buf-generate
 
-.PHONY: .install-goose
-.install-goose:
+.PHONY: install-goose
+install-goose:
 	$(info Installing binary dependencies...)
 	GOBIN=$(LOCAL_BIN) go install github.com/pressly/goose/v3/cmd/goose@v3.22.1
 
-.PHONY: .apply-migrations
-.apply-migrations:
+.PHONY: apply-migrations
+apply-migrations:
 	bin/goose -dir migrations postgres "postgresql://user:password@127.0.0.1:5432/loms_db?sslmode=disable" up

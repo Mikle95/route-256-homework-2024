@@ -6,8 +6,8 @@ PROTOC = PATH="$$PATH:$(LOCAL_BIN)" protoc
 LOMS_PROTO_PATH:="api/loms/v1"
 
 
-PHONY: .protoc-generate
-.protoc-generate: #.bin-deps .vendor-proto
+PHONY: protoc-generate
+protoc-generate: #.bin-deps .vendor-proto
 	mkdir -p api/openapiv2
 	protoc \
 	-I ../loms/${LOMS_PROTO_PATH} \

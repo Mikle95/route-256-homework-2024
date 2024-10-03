@@ -2,7 +2,6 @@ package initialization
 
 import (
 	"context"
-	"time"
 
 	"github.com/jackc/pgx/v5"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/app/server"
@@ -12,7 +11,6 @@ import (
 )
 
 func Build_server(ctx context.Context) *server.LOMSServer {
-	time.Sleep(time.Second)
 	conn, err := pgx.Connect(ctx, "postgres://user:password@pg_db:5432/loms_db")
 	if err != nil {
 		panic(err)
