@@ -9,12 +9,12 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *LOMSServer) OrderCreate(ctx context.Context, in *loms.OrderInfoMessage) (*loms.OrderID, error) {
+func (s *LOMSServer) OrderCreate(ctx context.Context, in *loms.OrderInfoMessage) (*loms.OrderId, error) {
 	id, err := s.impl.OrderCreate(ctx, repack(in))
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, err.Error())
 	}
-	return &loms.OrderID{OrderID: id}, nil
+	return &loms.OrderId{OrderId: id}, nil
 }
 
 func repack(order *loms.OrderInfoMessage) model.Order {

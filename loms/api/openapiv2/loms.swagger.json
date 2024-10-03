@@ -32,7 +32,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1EmptyResponse"
+              "$ref": "#/definitions/v1empty_response"
             }
           },
           "default": {
@@ -48,7 +48,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1OrderID"
+              "$ref": "#/definitions/v1order_id"
             }
           }
         ],
@@ -64,7 +64,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1OrderID"
+              "$ref": "#/definitions/v1order_id"
             }
           },
           "default": {
@@ -80,7 +80,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1OrderInfoMessage"
+              "$ref": "#/definitions/v1order_info_message"
             }
           }
         ],
@@ -96,7 +96,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1OrderInfoResponse"
+              "$ref": "#/definitions/v1order_info_response"
             }
           },
           "default": {
@@ -112,7 +112,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1OrderID"
+              "$ref": "#/definitions/v1order_id"
             }
           }
         ],
@@ -128,7 +128,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1EmptyResponse"
+              "$ref": "#/definitions/v1empty_response"
             }
           },
           "default": {
@@ -144,7 +144,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1OrderID"
+              "$ref": "#/definitions/v1order_id"
             }
           }
         ],
@@ -160,7 +160,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1StocksInfoResponse"
+              "$ref": "#/definitions/v1stocks_info_response"
             }
           },
           "default": {
@@ -176,7 +176,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1StockIDRequest"
+              "$ref": "#/definitions/v1stock_id_request"
             }
           }
         ],
@@ -215,10 +215,10 @@
         }
       }
     },
-    "v1EmptyResponse": {
+    "v1empty_response": {
       "type": "object"
     },
-    "v1Item": {
+    "v1item": {
       "type": "object",
       "properties": {
         "sku": {
@@ -231,16 +231,16 @@
         }
       }
     },
-    "v1OrderID": {
+    "v1order_id": {
       "type": "object",
       "properties": {
-        "orderID": {
+        "orderId": {
           "type": "string",
           "format": "int64"
         }
       }
     },
-    "v1OrderInfoMessage": {
+    "v1order_info_message": {
       "type": "object",
       "properties": {
         "user": {
@@ -251,12 +251,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1Item"
+            "$ref": "#/definitions/v1item"
           }
         }
       }
     },
-    "v1OrderInfoResponse": {
+    "v1order_info_response": {
       "type": "object",
       "properties": {
         "user": {
@@ -267,7 +267,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1Item"
+            "$ref": "#/definitions/v1item"
           }
         },
         "status": {
@@ -275,7 +275,7 @@
         }
       }
     },
-    "v1StockIDRequest": {
+    "v1stock_id_request": {
       "type": "object",
       "properties": {
         "sku": {
@@ -284,7 +284,7 @@
         }
       }
     },
-    "v1StocksInfoResponse": {
+    "v1stocks_info_response": {
       "type": "object",
       "properties": {
         "count": {

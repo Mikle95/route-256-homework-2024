@@ -14,7 +14,7 @@ func (c *Client) Checkout(ctx context.Context, order domain.Order) (domain.OID, 
 	if err != nil {
 		return 0, err
 	}
-	return response.OrderID, err
+	return response.OrderId, err
 }
 
 func orderRepack(order domain.Order) *loms.OrderInfoMessage {

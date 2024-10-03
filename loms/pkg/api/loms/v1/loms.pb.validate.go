@@ -531,22 +531,22 @@ var _ interface {
 	ErrorName() string
 } = ItemValidationError{}
 
-// Validate checks the field values on StockIDRequest with the rules defined in
+// Validate checks the field values on StockIdRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *StockIDRequest) Validate() error {
+func (m *StockIdRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on StockIDRequest with the rules defined
+// ValidateAll checks the field values on StockIdRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in StockIDRequestMultiError,
+// result is a list of violation errors wrapped in StockIdRequestMultiError,
 // or nil if none found.
-func (m *StockIDRequest) ValidateAll() error {
+func (m *StockIdRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *StockIDRequest) validate(all bool) error {
+func (m *StockIdRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -554,7 +554,7 @@ func (m *StockIDRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetSku() <= 0 {
-		err := StockIDRequestValidationError{
+		err := StockIdRequestValidationError{
 			field:  "Sku",
 			reason: "value must be greater than 0",
 		}
@@ -565,19 +565,19 @@ func (m *StockIDRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return StockIDRequestMultiError(errors)
+		return StockIdRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// StockIDRequestMultiError is an error wrapping multiple validation errors
-// returned by StockIDRequest.ValidateAll() if the designated constraints
+// StockIdRequestMultiError is an error wrapping multiple validation errors
+// returned by StockIdRequest.ValidateAll() if the designated constraints
 // aren't met.
-type StockIDRequestMultiError []error
+type StockIdRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m StockIDRequestMultiError) Error() string {
+func (m StockIdRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -586,11 +586,11 @@ func (m StockIDRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m StockIDRequestMultiError) AllErrors() []error { return m }
+func (m StockIdRequestMultiError) AllErrors() []error { return m }
 
-// StockIDRequestValidationError is the validation error returned by
-// StockIDRequest.Validate if the designated constraints aren't met.
-type StockIDRequestValidationError struct {
+// StockIdRequestValidationError is the validation error returned by
+// StockIdRequest.Validate if the designated constraints aren't met.
+type StockIdRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -598,22 +598,22 @@ type StockIDRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e StockIDRequestValidationError) Field() string { return e.field }
+func (e StockIdRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e StockIDRequestValidationError) Reason() string { return e.reason }
+func (e StockIdRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e StockIDRequestValidationError) Cause() error { return e.cause }
+func (e StockIdRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e StockIDRequestValidationError) Key() bool { return e.key }
+func (e StockIdRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e StockIDRequestValidationError) ErrorName() string { return "StockIDRequestValidationError" }
+func (e StockIdRequestValidationError) ErrorName() string { return "StockIdRequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e StockIDRequestValidationError) Error() string {
+func (e StockIdRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -625,14 +625,14 @@ func (e StockIDRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sStockIDRequest.%s: %s%s",
+		"invalid %sStockIdRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = StockIDRequestValidationError{}
+var _ error = StockIdRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -640,44 +640,44 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = StockIDRequestValidationError{}
+} = StockIdRequestValidationError{}
 
-// Validate checks the field values on OrderID with the rules defined in the
+// Validate checks the field values on OrderId with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *OrderID) Validate() error {
+func (m *OrderId) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on OrderID with the rules defined in the
+// ValidateAll checks the field values on OrderId with the rules defined in the
 // proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in OrderIDMultiError, or nil if none found.
-func (m *OrderID) ValidateAll() error {
+// a list of violation errors wrapped in OrderIdMultiError, or nil if none found.
+func (m *OrderId) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *OrderID) validate(all bool) error {
+func (m *OrderId) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for OrderID
+	// no validation rules for OrderId
 
 	if len(errors) > 0 {
-		return OrderIDMultiError(errors)
+		return OrderIdMultiError(errors)
 	}
 
 	return nil
 }
 
-// OrderIDMultiError is an error wrapping multiple validation errors returned
-// by OrderID.ValidateAll() if the designated constraints aren't met.
-type OrderIDMultiError []error
+// OrderIdMultiError is an error wrapping multiple validation errors returned
+// by OrderId.ValidateAll() if the designated constraints aren't met.
+type OrderIdMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m OrderIDMultiError) Error() string {
+func (m OrderIdMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -686,11 +686,11 @@ func (m OrderIDMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m OrderIDMultiError) AllErrors() []error { return m }
+func (m OrderIdMultiError) AllErrors() []error { return m }
 
-// OrderIDValidationError is the validation error returned by OrderID.Validate
+// OrderIdValidationError is the validation error returned by OrderId.Validate
 // if the designated constraints aren't met.
-type OrderIDValidationError struct {
+type OrderIdValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -698,22 +698,22 @@ type OrderIDValidationError struct {
 }
 
 // Field function returns field value.
-func (e OrderIDValidationError) Field() string { return e.field }
+func (e OrderIdValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e OrderIDValidationError) Reason() string { return e.reason }
+func (e OrderIdValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e OrderIDValidationError) Cause() error { return e.cause }
+func (e OrderIdValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e OrderIDValidationError) Key() bool { return e.key }
+func (e OrderIdValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e OrderIDValidationError) ErrorName() string { return "OrderIDValidationError" }
+func (e OrderIdValidationError) ErrorName() string { return "OrderIdValidationError" }
 
 // Error satisfies the builtin error interface
-func (e OrderIDValidationError) Error() string {
+func (e OrderIdValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -725,14 +725,14 @@ func (e OrderIDValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sOrderID.%s: %s%s",
+		"invalid %sOrderId.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = OrderIDValidationError{}
+var _ error = OrderIdValidationError{}
 
 var _ interface {
 	Field() string
@@ -740,7 +740,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = OrderIDValidationError{}
+} = OrderIdValidationError{}
 
 // Validate checks the field values on StocksInfoResponse with the rules
 // defined in the proto definition for this message. If any rules are

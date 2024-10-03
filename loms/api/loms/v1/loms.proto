@@ -40,35 +40,35 @@ service LOMS {
   };
 
 
-  rpc OrderCreate(OrderInfoMessage) returns (OrderID) {
+  rpc OrderCreate(order_info_message) returns (order_id) {
     option (google.api.http) = {
       post: "/order/create"
       body: "*"
     };
   }
 
-  rpc OrderInfo(OrderID) returns (OrderInfoResponse) {
+  rpc OrderInfo(order_id) returns (order_info_response) {
     option (google.api.http) = {
       post: "/order/info"
       body: "*"
     };
   }
 
-  rpc OrderPay(OrderID) returns (EmptyResponse) {
+  rpc OrderPay(order_id) returns (empty_response) {
     option (google.api.http) = {
       post: "/order/pay"
       body: "*"
     };
   }
 
-  rpc OrderCancel(OrderID) returns (EmptyResponse) {
+  rpc OrderCancel(order_id) returns (empty_response) {
     option (google.api.http) = {
       post: "/order/cancel"
       body: "*"
     };
   }
 
-  rpc StocksInfo(StockIDRequest) returns (StocksInfoResponse){
+  rpc StocksInfo(stock_id_request) returns (stocks_info_response){
     option (google.api.http) = {
       post: "/stock/info"
       body: "*"
@@ -76,20 +76,20 @@ service LOMS {
   }
 }
 
-message EmptyResponse {}
+message empty_response {}
 
-message OrderInfoMessage {
+message order_info_message {
     int64 user = 1;
-    repeated Item items = 2;
+    repeated item items = 2;
 }
 
-message OrderInfoResponse {
+message order_info_response {
     int64 user = 1;
-    repeated Item items = 2;
+    repeated item items = 2;
     string status = 3;
 }
 
-message Item {
+message item {
     uint32 sku = 1[(validate.rules).uint32 = {
       gt: 0
     }];
@@ -98,17 +98,17 @@ message Item {
     }];
 }
 
-message StockIDRequest {
+message stock_id_request {
     uint32 sku = 1 [(validate.rules).uint32 = {
       gt: 0
     }]; 
 }
 
-message OrderID {
-    int64 orderID = 1;
+message order_id {
+    int64 order_id = 1;
 }
 
-message StocksInfoResponse {
+message stocks_info_response {
     uint64 count = 1 [(validate.rules).uint64 = {
       gt: 0
     }];

@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *LOMSServer) StocksInfo(ctx context.Context, in *loms.StockIDRequest) (*loms.StocksInfoResponse, error) {
+func (s *LOMSServer) StocksInfo(ctx context.Context, in *loms.StockIdRequest) (*loms.StocksInfoResponse, error) {
 	stocks, err := s.impl.StocksInfo(ctx, in.Sku)
 	if err != nil {
 		return nil, status.Errorf(codes.FailedPrecondition, err.Error())
