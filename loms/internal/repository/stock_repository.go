@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"sync"
 
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
@@ -24,7 +24,7 @@ func (s *StockStorage) GetStock(_ context.Context, sku model.SKU) (model.Stock, 
 	stock, flag := s.storage[sku]
 	var err error
 	if !flag {
-		err = errors.New("wrong sku")
+		err = fmt.Errorf("%w: get stock: wrong sku", model.ErrorNotFound)
 	}
 
 	return stock, err

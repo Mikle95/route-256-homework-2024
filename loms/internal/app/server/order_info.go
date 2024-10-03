@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
 	"gitlab.ozon.dev/1mikle1/homework/loms/pkg/api/loms/v1"
@@ -11,8 +12,11 @@ import (
 
 func (s *LOMSServer) OrderInfo(ctx context.Context, in *loms.OrderId) (*loms.OrderInfoResponse, error) {
 	order, err := s.impl.OrderInfo(ctx, in.OrderId)
+	if errors.Is(err, model.ErrorNotFound) {
+		return nil, status.Errorf(codes.NotFound, err.Error())
+	}
 	if err != nil {
-		return nil, status.Errorf(codes.FailedPrecondition, err.Error())
+		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 	return repack_OrderInfoResponse(order), nil
 }

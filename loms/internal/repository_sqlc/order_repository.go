@@ -25,7 +25,7 @@ func NewOrderStorage(pool *pgxpool.Pool) *OrderStorage {
 func (s *OrderStorage) GetOrder(ctx context.Context, id model.OID) (model.Order, error) {
 	order, err := s.q.SelectOrder(ctx, int32(id))
 	if err != nil {
-		return model.Order{}, fmt.Errorf("SelectOrder: %w", err)
+		return model.Order{}, fmt.Errorf("%w: get order: %w", model.ErrorNotFound, err)
 	}
 
 	items, err := s.q.SelectItem(ctx, int32(id))
@@ -63,5 +63,9 @@ func (s *OrderStorage) AddOrder(ctx context.Context, order model.Order) (id mode
 }
 
 func (s *OrderStorage) ChangeOrder(_ context.Context, id model.OID, order model.Order) error {
-	return s.q.UpdateOrderStatus(context.Background(), &sqlc.UpdateOrderStatusParams{OrderID: int32(id), CurrentStatus: order.Status})
+	err := s.q.UpdateOrderStatus(context.Background(), &sqlc.UpdateOrderStatusParams{OrderID: int32(id), CurrentStatus: order.Status})
+	if err != nil {
+		return fmt.Errorf("%w: change order: %w", model.ErrorNotFound, err)
+	}
+	return nil
 }

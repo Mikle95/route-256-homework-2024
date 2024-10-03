@@ -2,6 +2,7 @@ package repository_sqlc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
@@ -23,7 +24,7 @@ func NewStockStorage(pool *pgxpool.Pool) *StockStorage {
 func (s *StockStorage) GetStock(ctx context.Context, sku model.SKU) (model.Stock, error) {
 	stock, err := s.q.GetStock(ctx, int32(sku))
 	if err != nil {
-		return model.Stock{}, err
+		return model.Stock{}, fmt.Errorf("%w: get stock: %w", model.ErrorNotFound, err)
 	}
 	return model.Stock{Sku: sku, Total_count: uint64(stock.TotalCount), Reserved: uint64(stock.Reserved)}, nil
 }
