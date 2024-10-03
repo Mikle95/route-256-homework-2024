@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"sync"
 
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
@@ -22,7 +22,7 @@ func (s *OrderStorage) GetOrder(_ context.Context, id model.OID) (model.Order, e
 	defer s.mtx.Unlock()
 
 	if id >= model.OID(len(s.storage)) || id < 0 {
-		return model.Order{}, errors.New("wrong id")
+		return model.Order{}, fmt.Errorf("%w: get order: wrong id", model.ErrorNotFound)
 	}
 
 	return s.storage[id], nil
@@ -41,7 +41,7 @@ func (s *OrderStorage) ChangeOrder(_ context.Context, id model.OID, order model.
 	defer s.mtx.Unlock()
 
 	if id >= model.OID(len(s.storage)) || id < 0 {
-		return errors.New("change order: wrong id")
+		return fmt.Errorf("%w: change order: wrong id", model.ErrorNotFound)
 	}
 
 	s.storage[id] = order
