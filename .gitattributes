@@ -1,3 +1,4 @@
+**/mock/** -diff
 **/mocks/** -diff
 **/*mock_test.go -diff -text
 *.pb.go -diff
