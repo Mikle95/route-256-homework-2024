@@ -61,34 +61,6 @@ func (s *CartService) AddItem(ctx context.Context, item model.CartItem) (model.C
 	return s.repository.AddItem(ctx, item)
 }
 
-func (s *CartService) GetItems(ctx context.Context, userId model.UID) (*model.UserCartInfo, error) {
-	mas, err := s.repository.GetItems(ctx, userId)
-	if err != nil {
-		return nil, err
-	}
-
-	result := model.UserCartInfo{
-		Items:      make([]model.ItemInfo, 0, len(mas)),
-		TotalPrice: 0,
-	}
-
-	for _, val := range mas {
-		item, err := s.productService.GetProduct(ctx, val.SKU)
-		if err != nil {
-			return nil, err
-		}
-		result.Items = append(result.Items, model.ItemInfo{
-			SKU:   val.SKU,
-			Name:  item.Name,
-			Price: item.Price,
-			Count: val.Count,
-		})
-
-		result.TotalPrice += item.Price * uint32(val.Count)
-	}
-	return &result, nil
-}
-
 func (s *CartService) DeleteItem(ctx context.Context, userId model.UID, sku model.Sku) error {
 	return s.repository.DeleteItem(ctx, userId, sku)
 }
