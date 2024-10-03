@@ -5,19 +5,20 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/repository_sqlc/sqlc"
 )
 
 type OrderStorage struct {
 	q    sqlc.Querier
-	conn *pgx.Conn
+	pool *pgxpool.Pool
 }
 
-func NewOrderStorage(conn *pgx.Conn) *OrderStorage {
+func NewOrderStorage(pool *pgxpool.Pool) *OrderStorage {
 	return &OrderStorage{
-		q:    sqlc.New(conn),
-		conn: conn,
+		q:    sqlc.New(pool),
+		pool: pool,
 	}
 }
 
@@ -41,7 +42,7 @@ func (s *OrderStorage) GetOrder(ctx context.Context, id model.OID) (model.Order,
 }
 
 func (s *OrderStorage) AddOrder(ctx context.Context, order model.Order) (id model.OID, err error) {
-	err = pgx.BeginFunc(ctx, s.conn, func(tx pgx.Tx) error {
+	err = pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
 		repo := sqlc.New(tx)
 		order_id, err := repo.InsertOrder(ctx, &sqlc.InsertOrderParams{UserID: int32(order.User_id), CurrentStatus: order.Status})
 		if err != nil {

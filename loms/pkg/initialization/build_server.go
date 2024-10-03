@@ -3,7 +3,7 @@ package initialization
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/app/server"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/repository_sqlc"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/service"
@@ -11,13 +11,13 @@ import (
 )
 
 func Build_server(ctx context.Context) *server.LOMSServer {
-	conn, err := pgx.Connect(ctx, "postgres://user:password@pg_db:5432/loms_db")
+	pool, err := pgxpool.New(ctx, "postgres://user:password@pg_db:5432/loms_db")
 	if err != nil {
 		panic(err)
 	}
 
-	stockRepo := repository_sqlc.NewStockStorage(conn)
-	orderRepo := repository_sqlc.NewOrderStorage(conn)
+	stockRepo := repository_sqlc.NewStockStorage(pool)
+	orderRepo := repository_sqlc.NewOrderStorage(pool)
 
 	stockS := service.NewStockService(stockRepo)
 	orderS := service.NewOrderService(orderRepo)

@@ -3,20 +3,20 @@ package repository_sqlc
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/model"
 	"gitlab.ozon.dev/1mikle1/homework/loms/internal/repository_sqlc/sqlc"
 )
 
 type StockStorage struct {
 	q    sqlc.Querier
-	conn *pgx.Conn
+	pool *pgxpool.Pool
 }
 
-func NewStockStorage(conn *pgx.Conn) *StockStorage {
+func NewStockStorage(pool *pgxpool.Pool) *StockStorage {
 	return &StockStorage{
-		q:    sqlc.New(conn),
-		conn: conn,
+		q:    sqlc.New(pool),
+		pool: pool,
 	}
 }
 
