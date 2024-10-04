@@ -11,6 +11,7 @@ require (
 	github.com/guiferpa/gody/v2 v2.2.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sync v0.8.0
+	golang.org/x/time v0.6.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240903143218-8af14fe29dc1
 	google.golang.org/grpc v1.66.0
 	google.golang.org/protobuf v1.34.2
