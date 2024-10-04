@@ -3,14 +3,18 @@ package repository
 import (
 	"context"
 	"sort"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gitlab.ozon.dev/1mikle1/homework/cart/internal/pkg/cart/model"
+	"go.uber.org/goleak"
 )
 
 func TestHandler_AddItem_Table(t *testing.T) {
+	defer goleak.VerifyNone(t, goleak.IgnoreCurrent())
+	t.Parallel()
 	ctx := context.Background()
 
 	type data struct {
@@ -59,6 +63,8 @@ func TestHandler_AddItem_Table(t *testing.T) {
 }
 
 func TestUserCart_DeleteItem_Table(t *testing.T) {
+	defer goleak.VerifyNone(t, goleak.IgnoreCurrent())
+	t.Parallel()
 	ctx := context.Background()
 
 	type data struct {
@@ -101,6 +107,8 @@ func TestUserCart_DeleteItem_Table(t *testing.T) {
 }
 
 func TestUserCart_GetItems(t *testing.T) {
+	defer goleak.VerifyNone(t, goleak.IgnoreCurrent())
+	t.Parallel()
 	ctx := context.Background()
 	userStorage := NewUserStorage()
 
@@ -138,6 +146,7 @@ func TestUserCart_GetItems(t *testing.T) {
 	}
 
 	t.Run("Get items", func(t *testing.T) {
+		t.Parallel()
 
 		for _, item := range items {
 			_, err := userStorage.AddItem(ctx, item)
@@ -159,6 +168,8 @@ func TestUserCart_GetItems(t *testing.T) {
 }
 
 func TestUserCart_DeleteCart_Table(t *testing.T) {
+	defer goleak.VerifyNone(t, goleak.IgnoreCurrent())
+	t.Parallel()
 	ctx := context.Background()
 
 	type data struct {
@@ -198,4 +209,46 @@ func TestUserCart_DeleteCart_Table(t *testing.T) {
 			assert.Empty(t, mas)
 		})
 	}
+}
+
+func TestHandler_AddItem_Parallel_Table(t *testing.T) {
+	defer goleak.VerifyNone(t, goleak.IgnoreCurrent())
+	t.Parallel()
+	ctx := context.Background()
+
+	type data struct {
+		name          string
+		item          model.CartItem
+		wantErr       error
+		expectedCount model.Count
+	}
+
+	testData := data{
+		name: "valid add new item",
+		item: model.CartItem{
+			UserId: 123,
+			SKU:    100,
+			Count:  2,
+		},
+		wantErr:       nil,
+		expectedCount: 2,
+	}
+
+	userStorage := NewUserStorage()
+
+	wg := sync.WaitGroup{}
+	for range 10 {
+		wg.Add(1)
+		go func() {
+			_, err := userStorage.AddItem(ctx, testData.item)
+			require.NoError(t, err)
+			wg.Done()
+		}()
+	}
+
+	wg.Wait()
+
+	items, err := userStorage.GetItems(ctx, 123)
+	require.NoError(t, err)
+	assert.EqualValues(t, 20, items[0].Count)
 }
