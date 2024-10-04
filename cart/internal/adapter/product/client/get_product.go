@@ -18,8 +18,13 @@ type ResponseData struct {
 	Price uint32 `json:"price"`
 }
 
+const path_get_product_api = "/get_product"
+
 func (p *ProductClient) GetProduct(ctx context.Context, sku domain.Sku) (rd *domain.Item, err error) {
-	path_api := "/get_product"
+
+	if err := p.limiter.Wait(ctx); err != nil {
+		return nil, err
+	}
 
 	body := RequestData{
 		Token: p.token,
@@ -31,7 +36,7 @@ func (p *ProductClient) GetProduct(ctx context.Context, sku domain.Sku) (rd *dom
 		return nil, err
 	}
 
-	resp, err := p.client.Post(p.hostName+path_api, "application/json", bytes.NewBuffer(jsonBody))
+	resp, err := p.client.Post(p.hostName+path_get_product_api, "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return nil, err
 	}

@@ -20,7 +20,7 @@ type ItemServiceSuite struct {
 
 func (s *ItemServiceSuite) SetupSuite() {
 	storage := repository.NewUserStorage()
-	productClient := productC.NewProductClient(http.Client{}, "http://route256.pavl.uk:8080", "testtoken")
+	productClient := productC.NewProductClient(http.Client{}, "http://route256.pavl.uk:8080", "testtoken", 10)
 	productService := productS.NewProductService(productClient)
 	s.service = service.NewCartService(storage, productService, nil)
 
