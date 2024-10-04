@@ -26,10 +26,6 @@ func (p *ProductClient) GetProduct(ctx context.Context, sku domain.Sku) (rd *dom
 		return nil, err
 	}
 
-	if err := ctx.Err(); err != nil {
-		return nil, err
-	}
-
 	body := RequestData{
 		Token: p.token,
 		Sku:   int64(sku),

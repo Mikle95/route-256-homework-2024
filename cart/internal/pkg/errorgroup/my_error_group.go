@@ -1,4 +1,4 @@
-package my_errorgroup
+package errorgroup
 
 import (
 	"context"
