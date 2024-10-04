@@ -14,14 +14,14 @@ func (c *Client) Checkout(ctx context.Context, order domain.Order) (domain.OID, 
 	if err != nil {
 		return 0, err
 	}
-	return response.OrderID, err
+	return response.OrderId, err
 }
 
-func orderRepack(order domain.Order) *loms.OrderCreateRequest {
-	result := loms.OrderCreateRequest{Info: &loms.OrderInfo{User: order.User_id, Items: make([]*loms.Item, 0)}}
+func orderRepack(order domain.Order) *loms.OrderInfoMessage {
+	result := loms.OrderInfoMessage{User: order.User_id, Items: make([]*loms.Item, 0)}
 
 	for _, item := range order.Items {
-		result.Info.Items = append(result.Info.Items, &loms.Item{
+		result.Items = append(result.Items, &loms.Item{
 			Sku:   uint32(item.Sku),
 			Count: uint32(item.Count),
 		})
