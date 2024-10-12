@@ -1,4 +1,4 @@
-version: "6"
+version: "6.0"
 
 services:
   postgres:
@@ -41,6 +41,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      kafka0:
+        condition: service_healthy
     ports:
       - "8081:8081" # HTTP
       - "50051:50051" # gRPC
@@ -48,6 +50,9 @@ services:
 # Kafka
 
   kafka-ui:
+    depends_on:
+      kafka0:
+        condition: service_healthy
     container_name: route256-kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
@@ -59,7 +64,7 @@ services:
 
   kafka0:
     container_name: route256-kafka
-    image: confluentinc/cp-kafka:7.7.1.arm64
+    image: confluentinc/cp-kafka:7.7.1 #.arm64
     ports:
       - 9092:9092
     environment:
@@ -74,6 +79,20 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka0:29093"
       KAFKA_PROCESS_ROLES: "broker,controller"
       KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
-      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      CLUSTER_ID: 'SoMeCl4sTerId'
+    healthcheck:
+      test: kafka-topics --list --bootstrap-server kafka0:29092
+      interval: 5s
+      timeout: 10s
+      retries: 3
 #    command: "bash -c '/tmp/run_workaround.sh && /etc/confluent/docker/run'"
 
+  kafka-init-topics:
+    container_name: route256-init-topics
+    image: confluentinc/cp-kafka:7.7.1 #.arm64
+    depends_on:
+      kafka0:
+        condition: service_healthy
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+      cub kafka-ready -b kafka0:29092 1 30 && \
+      kafka-topics --create --topic loms.order-events --partitions 2 --replication-factor 1 --if-not-exists --bootstrap-server kafka0:29092'"
