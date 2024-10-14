@@ -32,7 +32,7 @@ func Build_server() *server.CartServer {
 		Timeout:   0,
 	}
 
-	productClient := product_client.NewProductClient(client, "http://route256.pavl.uk:8080", "testtoken")
+	productClient := product_client.NewProductClient(client, "http://route256.pavl.uk:8080", "testtoken", 10)
 
 	productService := product_service.NewProductService(productClient)
 
