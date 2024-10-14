@@ -4,3 +4,4 @@ toolchain go1.22.5
 
 use ./cart
 use ./loms
+use ./notifier
