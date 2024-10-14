@@ -1,51 +1,61 @@
 version: "6.0"
 
 services:
-  postgres:
-    container_name: pg_db
-    image: postgres:16
-    restart: unless-stopped
-    volumes:
-      - ./postgresql_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    command: ["postgres"]
-    environment:
-      POSTGRES_DB: loms_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_HOST_AUTH_METHOD: trust
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
-      interval: 3s
-      timeout: 5s
-      retries: 5
+  # postgres:
+  #   container_name: pg_db
+  #   image: postgres:16
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./postgresql_data:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432
+  #   command: ["postgres"]
+  #   environment:
+  #     POSTGRES_DB: loms_db
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_HOST_AUTH_METHOD: trust
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U user"]
+  #     interval: 3s
+  #     timeout: 5s
+  #     retries: 5
 
-  migrate:
-    build: ./migrations/
+  # migrate:
+  #   build: ./migrations/
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   restart: "no"
+
+
+  # cart:
+  #   container_name: cart
+  #   build: ./cart/
+  #   ports:
+  #     - "8082:8082" # HTTP
+
+  # loms:
+  #   container_name: loms
+  #   build: ./loms/
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     kafka0:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8081:8081" # HTTP
+  #     - "50051:50051" # gRPC
+  notifier-1:
+    container_name: notifier-1
+    build: ./notifier/
     depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
-
-
-  cart:
-    container_name: cart
-    build: ./cart/
-    ports:
-      - "8082:8082" # HTTP
-
-  loms:
-    container_name: loms
-    build: ./loms/
-    depends_on:
-      postgres:
-        condition: service_healthy
       kafka0:
         condition: service_healthy
-    ports:
-      - "8081:8081" # HTTP
-      - "50051:50051" # gRPC
+    command:
+      ["--topic", "loms.order-events", 
+      "--bootstrap-server", "kafka0:9092"] 
+      # "--cg-name", "loms.order-events-cg-1"]
 
 # Kafka
 
@@ -70,7 +80,7 @@ services:
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka0:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka0:29092,PLAINTEXT_HOST://kafka0:9092
       KAFKA_LISTENERS: PLAINTEXT://kafka0:29092,CONTROLLER://kafka0:29093,PLAINTEXT_HOST://:9092
       KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

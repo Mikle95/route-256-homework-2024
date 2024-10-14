@@ -17,6 +17,7 @@ var cliFlags = flags{}
 
 func main() {
 	log.Println("app starting")
+	log.Printf("kafka andress: %v", cliFlags.bootstrapServer)
 
 	var (
 		wg   = &sync.WaitGroup{}
